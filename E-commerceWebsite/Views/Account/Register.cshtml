@@ -1,0 +1,91 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "Register";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="d-flex align-items-center justify-content-center" style="height: 100vh;">
+
+    <div class="card text-center shadow p-4" style="width: 100%; max-width: 500px; background-color: #53348b;">
+        <h4 class="text-white mb-4">Register</h4>
+
+        <form asp-action="Register" method="post" onsubmit="return validateForm()">
+            <div class="form-group text-left">
+                <label class="text-white">Full Name</label>
+                <input type="text" class="form-control" id="FullName" name="FullName" required />
+            </div>
+            <div class="form-group text-left">
+                <label class="text-white">Username</label>
+                <input type="text" class="form-control" id="Username" name="Username" required minlength="3" />
+            </div>
+            <div class="form-group text-left">
+                <label class="text-white">Email</label>
+                <input type="email" class="form-control" id="Email" name="Email" required />
+            </div>
+            <div class="form-group text-left">
+                <label class="text-white">Password</label>
+                <input type="password" class="form-control" id="Password" name="Password" required minlength="6" />
+            </div>
+            <div class="form-group text-left">
+                <label class="text-white">Confirm Password</label>
+                <input type="password" class="form-control" id="ConfirmPassword" name="ConfirmPassword" required />
+            </div>
+            <button id="registerBtn" type="submit" class="btn btn-primary btn-block">
+                <span id="btnText">Register</span>
+                <span id="btnSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            </button>
+        </form>
+
+        <p class="mt-4 text-white-50">Already have an account? <a href="/Account/Login" class="text-white">Login here</a>.</p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function validateForm() {
+            const registerBtn = document.getElementById("registerBtn");
+            const btnText = document.getElementById("btnText");
+            const btnSpinner = document.getElementById("btnSpinner");
+
+            // Perform validations
+            const fullName = document.getElementById("FullName").value.trim();
+            const username = document.getElementById("Username").value.trim();
+            const email = document.getElementById("Email").value.trim();
+            const password = document.getElementById("Password").value;
+            const confirmPassword = document.getElementById("ConfirmPassword").value;
+
+            if (!fullName || !username || !email || !password || !confirmPassword) {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'All fields are required!' });
+                return false;
+            }
+
+            if (password !== confirmPassword) {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Passwords do not match!' });
+                return false;
+            }
+
+            // Show loading spinner
+            btnText.textContent = "Registering...";
+            btnSpinner.classList.remove("d-none");
+            registerBtn.disabled = true;
+
+            // Allow form submission
+            return true;
+        }
+
+
+        
+    </script>
+
+</body>
+</html>

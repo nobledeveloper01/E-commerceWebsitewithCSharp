@@ -1,0 +1,121 @@
+﻿@model E_commerceWebsite.ViewModels.ProductCatalogViewModel
+
+@{
+    Layout = "~/Views/Shared/CustomerLayout.cshtml";
+    ViewData["Title"] = "Product Catalog";
+}
+
+<h2>Product Catalog</h2>
+
+
+<!-- Category Buttons at the Top -->
+<div class="d-flex justify-content-center mb-4">
+    <form method="get" asp-action="ProductCatalog" asp-controller="Product" asp-area="Customer">
+        <div class="btn-group" role="group" aria-label="Category Filter">
+            <button type="submit" name="category" value="men-wear"
+                    class="btn @(Model.ActiveCategory == "men-wear" ? "btn-primary" : "btn-outline-primary") mx-2">
+                Men's Wear
+            </button>
+            <button type="submit" name="category" value="women-wear"
+                    class="btn @(Model.ActiveCategory == "women-wear" ? "btn-primary" : "btn-outline-primary") mx-2">
+                Women's Wear
+            </button>
+            <button type="submit" name="category" value="kids-wear"
+                    class="btn @(Model.ActiveCategory == "kids-wear" ? "btn-primary" : "btn-outline-primary") mx-2">
+                Kids' Wear
+            </button>
+            <button type="submit" name="category" value="accessories"
+                    class="btn @(Model.ActiveCategory == "accessories" ? "btn-primary" : "btn-outline-primary") mx-2">
+                Accessories
+            </button>
+        </div>
+    </form>
+</div>
+
+
+
+
+<!-- Main Container -->
+<div class="container my-4">
+    <div class="row">
+        <!-- Product Cards (Center) -->
+        <div class="col-md-8">
+            <div class="row">
+                @foreach (var product in Model.Products)
+                {
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 rounded-3 shadow-lg">
+                            <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" />
+                            <div class="card-body">
+                                <h5 class="card-title">@product.Name</h5>
+                                <p class="card-text">@product.Description</p>
+                                <p class="card-text font-weight-bold">₦@product.Price</p>
+                                <a href="@Url.Action("ProductDetails", "Product", new { id = product.Id, area = "Customer" })" class="btn btn-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Filter Sidebar (Right) -->
+        <div class="col-md-4 shadow-lg p-5">
+            <h5>Filters</h5>
+            <form method="get" asp-action="ProductCatalog" asp-controller="Product" asp-area="Customer">
+                <!-- Price Range -->
+                <h6 class="mt-3">Price Range</h6>
+                <div class="form-group">
+                    <label for="priceRange">Min Price</label>
+                    <input type="number" class="form-control" name="minPrice" placeholder="Min Price" />
+                    <label for="priceRange" class="mt-2">Max Price</label>
+                    <input type="number" class="form-control" name="maxPrice" placeholder="Max Price" />
+                </div>
+
+                <!-- Colors -->
+                <h6 class="mt-4">Colors</h6>
+                <div class="d-flex flex-wrap">
+                    @foreach (var color in new[] { "red", "blue", "green", "yellow", "black", "white" })
+                    {
+                        <label class="mr-2">
+                            <input type="checkbox" name="colors" value="@color" class="mr-1" />
+                            <span style="display: inline-block; width: 20px; height: 20px; background-color: @color; border: 1px solid #ccc; border-radius: 50%;"></span>
+                        </label>
+                    }
+                </div>
+
+                <!-- Apply Filters Button -->
+                <button type="submit" class="btn btn-dark mt-4 w-100">Apply Filters</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<!-- Pagination Section -->
+<div class="d-flex justify-content-center mt-4">
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <!-- Previous Page Link -->
+            <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("ProductCatalog", "Product", new { area = "Customer", pageNumber = Model.PageNumber - 1 })" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            <!-- Page Numbers -->
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("ProductCatalog", "Product", new { area = "Customer", pageNumber = i })">@i</a>
+                </li>
+            }
+
+            <!-- Next Page Link -->
+            <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("ProductCatalog", "Product", new { area = "Customer", pageNumber = Model.PageNumber + 1 })" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

@@ -1,0 +1,146 @@
+﻿@{
+    Layout = "~/Views/Shared/CustomerLayout.cshtml";
+    ViewData["Title"] = "Customer Dashboard";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Welcome to Your Shopping Mall Dashboard!</h2>
+    <p class="text-center">Explore our categories and find what you’re looking for!</p>
+
+    <!-- Categories Section -->
+    <div class="row text-center">
+        <!-- Men Wears -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm border-0">
+                <img src="~/images/men-fashion.jpg" class="card-img-top" alt="Men Wears">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-male mr-2"></i> Men Wears</h5>
+                    <p class="card-text">Discover the latest in men's fashion, from casual to formal wear.</p>
+                    <a href="@Url.Action("ProductCatalog", "Product", new { area = "Customer" })" class="btn btn-primary">Shop Now</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Women Wears -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm border-0">
+                <img src="~/images/women-fashion.jpg" class="card-img-top" alt="Women Wears">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-female mr-2"></i> Women Wears</h5>
+                    <p class="card-text">Find beautiful outfits for every occasion, from dresses to accessories.</p>
+                    <a href="@Url.Action("ProductCatalog", "Product", new { area = "Customer" })" class="btn btn-primary">Shop Now</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kid Wear -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm border-0">
+                <img src="~/images/kids-fashion.jpg" class="card-img-top" alt="Kid Wear">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-child mr-2"></i> Kid Wear</h5>
+                    <p class="card-text">Explore trendy and comfortable styles for kids of all ages.</p>
+                    <a href="@Url.Action("ProductCatalog", "Product", new { area = "Customer" })" class="btn btn-primary">Shop Now</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accessories -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm border-0">
+                <img src="~/images/accessories.jpg" class="card-img-top" alt="Accessories">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-sunglasses mr-2"></i> Accessories</h5>
+                    <p class="card-text">Complete your outfit with our collection of stylish accessories.</p>
+                    <a href="@Url.Action("ProductCatalog", "Product", new { area = "Customer" })" class="btn btn-primary">Shop Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Products Section -->
+    <div class=" text-center mt-5">
+        <h3 class="text-center mb-4">Featured Products</h3>
+        <div class="row">
+
+            <!-- Product 1 -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm border-0">
+                    <img src="~/images/jacket-fashion.jpg" class="card-img-top" alt="Featured Product 1">
+                    <div class="card-body">
+                        <h5 class="card-title">Stylish Men’s Jacket</h5>
+                        <p class="card-text">A sleek, modern jacket for any occasion.</p>
+                        <a href="@Url.Action("ProductCatalog", "Product", new { area = "Customer" })" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm border-0">
+                    <img src="~/images/women-dress.jpg" class="card-img-top" alt="Featured Product 2">
+                    <div class="card-body">
+                        <h5 class="card-title">Elegant Women’s Dress</h5>
+                        <p class="card-text">Perfect for a night out or formal event.</p>
+                        <a href="@Url.Action("ProductCatalog", "Product", new { area = "Customer" })" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm border-0">
+                    <img src="~/images/kids-shoe.jpg" class="card-img-top" alt="Featured Product 3">
+                    <div class="card-body">
+                        <h5 class="card-title">Trendy Kid’s Sneakers</h5>
+                        <p class="card-text">Comfortable and fashionable shoes for children.</p>
+                        <a href="@Url.Action("ProductCatalog", "Product", new { area = "Customer" })" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</div>
+      
+
+    <!-- Special Offers Section -->
+    <div class=" text-center mt-5">
+        <h3 class="text-center mb-4">Special Offers</h3>
+
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm border-0">
+                    <img src="~/images/buy1get1.jpg" class="card-img-top" alt="Special Offer 1">
+                    <div class="card-body">
+                        <h5 class="card-title">Buy 1 Get 1 Free on Select Accessories</h5>
+                        <p class="card-text">Don’t miss out on this limited-time offer!</p>
+                        <a href="@Url.Action("ProductCatalog", "Product", new { area = "Customer" })" class="btn btn-primary">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm border-0">
+                    <img src="~/images/20percentdiscount.jpg" class="card-img-top" alt="Special Offer 2">
+                    <div class="card-body">
+                        <h5 class="card-title">20% Off All Men’s Wear</h5>
+                        <p class="card-text">Grab this special discount before it ends!</p>
+                        <a href="@Url.Action("ProductCatalog", "Product", new { area = "Customer" })" class="btn btn-primary">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm border-0">
+                    <img src="~/images/kid-offer.jpg" class="card-img-top" alt="Special Offer 3">
+                    <div class="card-body">
+                        <h5 class="card-title">Up to 50% Off on Kid’s Fashion</h5>
+                        <p class="card-text">Get the best deals on trendy kid’s wear!</p>
+                        <a href="@Url.Action("ProductCatalog", "Product", new { area = "Customer" })" class="btn btn-primary">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>

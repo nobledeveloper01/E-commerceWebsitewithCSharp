@@ -1,0 +1,42 @@
+﻿@using E_commerceWebsite.Data.Entities
+@model List<OrderAdmin>
+@{
+    Layout = "~/Views/Shared/CustomerLayout.cshtml";
+}
+
+<h2>Order History</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <p>No orders found.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Total Amount</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.OrderId</td>
+                    <td>@order.OrderDate.ToShortDateString()</td>
+                    <td>@order.Status</td>
+                    <td>₦@order.TotalAmount.ToString()</td>
+                    <td>
+                        <a href="@Url.Action("OrderDetails", "Customer", new { orderId = order.OrderId })" class="btn btn-primary">
+                            View Details
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

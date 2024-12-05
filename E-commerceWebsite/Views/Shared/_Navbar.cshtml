@@ -1,0 +1,48 @@
+﻿<nav class="navbar navbar-expand-lg shadow-sm" style="background: linear-gradient(45deg, #fff, #fff)">
+    <div class="container">
+        <!-- Brand -->
+        <a class="navbar-brand fw-bold text-black" asp-area="" asp-controller="Home" asp-action="Index">
+            E-commerce<span class="text-primary">Website</span>
+        </a>
+
+        <!-- Toggler button for small screens -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-black" style="transition: color 0.3s;" asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-black" style="transition: color 0.3s;" asp-controller="Home" asp-action="Contact">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-black" style="transition: color 0.3s;" asp-controller="Home" asp-action="About">About</a>
+                </li>
+            </ul>
+
+           
+
+           
+            <ul class="navbar-nav align-items-center">
+               
+
+                <!-- Login and Sign Up buttons -->
+                <li class="nav-item me-2">
+                    <a class="btn btn-dark text-white"
+                       style="border-radius: 20px; padding-left: 20px; padding-right: 20px; transition: background 0.3s, color 0.3s;"
+                       asp-controller="Account" asp-action="Login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-dark text-white"
+                       style="border-radius: 20px; padding-left: 20px; padding-right: 20px; transition: background 0.3s, color 0.3s;"
+                       asp-controller="Account" asp-action="Register">Sign Up</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

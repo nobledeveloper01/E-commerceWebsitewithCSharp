@@ -1,0 +1,183 @@
+﻿@model E_commerceWebsite.ViewModels.ProductViewModel
+@{
+    Layout = "~/Views/Shared/CustomerLayout.cshtml";
+}
+
+<style>
+    .product-detail-page {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 20px;
+        gap: 20px;
+    }
+
+    .product-gallery {
+        flex: 1 1 40%;
+        max-width: 500px;
+    }
+
+        .product-gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+    .product-info {
+        flex: 1 1 50%;
+        max-width: 600px;
+    }
+
+    .price {
+        font-size: 1.5rem;
+        color: green;
+    }
+
+    .original-price {
+        text-decoration: line-through;
+        color: grey;
+        margin-left: 10px;
+    }
+
+    .color-option {
+        margin: 5px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid #ccc;
+        cursor: pointer;
+    }
+
+    .size-option {
+        margin: 5px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .quantity-selector input {
+        width: 60px;
+        padding: 5px;
+    }
+
+    .add-to-cart {
+        padding: 10px 20px;
+        background-color: #333;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+</style>
+
+<div class="product-detail-page">
+    <div class="product-gallery">
+        <img src="@Model.ImageUrl" alt="@Model.Name" />
+    </div>
+
+    <div class="product-info">
+        <h2>@Model.Name</h2>
+        <p class="price">
+            ₦ @Model.DiscountedPrice.ToString()
+            @if (Model.DiscountedPrice < Model.Price)
+            {
+                <span class="original-price">₦ @Model.Price.ToString()</span>
+            }
+        </p>
+
+        <p>@Model.Description</p>
+
+        <div class="color-selector">
+            <h5>Select Color:</h5>
+            @foreach (var color in Model.Colors)
+            {
+                <button class="color-option" style="background-color: @color;"></button>
+            }
+        </div>
+
+        <div class="size-selector">
+            <h5>Choose Size:</h5>
+            @foreach (var size in Model.Sizes)
+            {
+                <button class="size-option">@size</button>
+            }
+        </div>
+
+        <div class="quantity-selector">
+            <h5>Quantity:</h5>
+            <input type="number" id="quantity" min="1" value="1" />
+        </div>
+
+        <form method="post" asp-controller="Cart" asp-action="AddToCart" id="addToCartForm">
+            <input type="hidden" name="productId" value="@Model.Id" />
+            <input type="hidden" name="selectedColor" id="selectedColor" />
+            <input type="hidden" name="selectedSize" id="selectedSize" />
+            <input type="hidden" name="quantity" id="quantityValue" />
+
+            <button type="submit" class="add-to-cart">Add to Cart</button>
+        </form>
+    </div>
+</div>
+
+<!-- Include SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.all.min.js"></script>
+
+<script>
+    // Wait for the DOM to be fully loaded before running the script
+    document.addEventListener('DOMContentLoaded', function () {
+        // Select color automatically if there is only one color
+        const colorOptions = document.querySelectorAll('.color-option');
+        if (colorOptions.length === 0) {
+            const selectedColor = colorOptions[0].style.backgroundColor;
+            document.getElementById('selectedColor').value = selectedColor;
+        }
+
+        // Select size automatically if there is only one size
+        const sizeOptions = document.querySelectorAll('.size-option');
+        if (sizeOptions.length === 0) {
+            const selectedSize = sizeOptions[0].innerText;
+            document.getElementById('selectedSize').value = selectedSize;
+        }
+
+        // Event listeners for selecting color, size, and quantity
+        colorOptions.forEach(button => {
+            button.addEventListener('click', () => {
+                // Set the selected color value
+                document.getElementById('selectedColor').value = button.style.backgroundColor;
+            });
+        });
+
+        sizeOptions.forEach(button => {
+            button.addEventListener('click', () => {
+                // Set the selected size value
+                document.getElementById('selectedSize').value = button.innerText;
+            });
+        });
+
+        // Event listener for quantity input change
+        document.getElementById('quantity').addEventListener('change', (e) => {
+            document.getElementById('quantityValue').value = e.target.value;
+        });
+
+        // Form submission validation
+        document.getElementById('addToCartForm').addEventListener('submit', function (event) {
+            const selectedColor = document.getElementById('selectedColor').value;
+            const selectedSize = document.getElementById('selectedSize').value;
+            const quantity = document.getElementById('quantityValue').value;
+
+            // Check if all required fields are selected
+            if (!selectedColor || !selectedSize || quantity < 1) {
+                event.preventDefault(); // Prevent form submission
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please select a color, size, and quantity before adding to cart.',
+                    confirmButtonText: 'OK'
+                }); // Show SweetAlert error message
+            }
+        });
+    });
+</script>
+

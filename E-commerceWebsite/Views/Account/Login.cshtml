@@ -1,0 +1,80 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "Login";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="d-flex align-items-center justify-content-center" style="height: 100vh;">
+
+    <div class="card text-center shadow p-4" style="width: 100%; max-width: 500px; background-color: #53348b;">
+        <!-- Icon -->
+        <div class="mb-4">
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 4H2V6H5L8 14L6.5 17H19.5L21 14H9L8.5 12H20V10H8L6.5 6H4ZM6 19C5.45 19 5 19.45 5 20C5 20.55 5.45 21 6 21C6.55 21 7 20.55 7 20C7 19.45 6.55 19 6 19ZM18 19C17.45 19 17 19.45 17 20C17 20.55 17.45 21 18 21C18.55 21 19 20.55 19 20C19 19.45 18.55 19 18 19Z" fill="#ffffff" />
+            </svg>
+        </div>
+
+        <!-- Title -->
+        <h4 class="text-white mb-4">Login</h4>
+
+        <form method="post" onsubmit="return validateForm()" asp-action="Login">
+            <div class="form-group text-left">
+                <label for="Username" class="text-white">Username</label>
+                <input type="text" class="form-control bg-gray text-dark border-light" id="Username" name="username" placeholder="Enter your username" required />
+            </div>
+            <div class="form-group text-left">
+                <label for="Password" class="text-white">Password</label>
+                <input type="password" class="form-control bg-gray text-dark border-light" id="Password" name="password" placeholder="Enter your password" required />
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <div class="form-group form-check text-left">
+                    <input type="checkbox" class="form-check-input" id="RememberMe" name="RememberMe" />
+                    <label class="form-check-label text-white" for="RememberMe">Remember Me</label>
+                </div>
+                <div class="text-right mb-3">
+                    <a href="/Account/ForgotPassword" class="text-white-50">Forgot password?</a>
+                </div>
+            </div>
+
+            <button id="loginBtn" type="submit" class="btn btn-primary btn-block">
+                <span id="btnText">Login</span>
+                <span id="btnSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            </button>
+        </form>
+
+        <!-- Register Link -->
+        <p class="mt-4 text-white-50">Don't have an account? <a href="/Account/Register" class="text-white">Register here</a>.</p>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Add SweetAlert2 -->
+
+    <script>
+        function validateForm() {
+            const loginBtn = document.getElementById("loginBtn");
+            const btnText = document.getElementById("btnText");
+            const btnSpinner = document.getElementById("btnSpinner");
+
+            // Show loading spinner
+            btnText.textContent = "Logging in...";
+            btnSpinner.classList.remove("d-none");
+            loginBtn.disabled = true;
+
+            // Allow form submission
+            return true;
+        }
+               
+    </script>
+</body>
+</html>
