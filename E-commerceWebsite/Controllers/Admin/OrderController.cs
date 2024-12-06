@@ -21,7 +21,7 @@ namespace E_commerceWebsite.Controllers.Admin
             return View("~/Views/Admin/OrderManagement.cshtml", orders);
         }
 
-        // POST: Order/UpdateOrderStatus
+        
         // POST: Order/UpdateOrderStatus
         [HttpPost]
         public IActionResult UpdateOrderStatus([FromBody] UpdateOrderStatusModel request)

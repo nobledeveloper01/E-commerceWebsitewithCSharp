@@ -1,4 +1,9 @@
-﻿@{
+﻿@model E_commerceWebsite.ViewModels.DashboardViewModel
+@using E_commerceWebsite.Data.Entities
+@using E_commerceWebsite.Data
+
+
+@{
     Layout = "~/Views/Shared/AdminLayout.cshtml";
     ViewData["Title"] = "Admin Dashboard";
 }
@@ -8,6 +13,7 @@
 
     <!-- Metrics Section -->
     <div class="row text-center mb-5">
+        @* Total Sales *@
         <div class="col-md-3">
             <div class="card shadow-sm">
                 <div class="card-body">
@@ -17,29 +23,35 @@
                 </div>
             </div>
         </div>
+
+        @* Orders *@
         <div class="col-md-3">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Orders</h5>
-                    <p class="card-text">@Model?.TotalOrders ?? 0</p>
+                    <p class="card-text">@(Model?.TotalOrders ?? 0)</p>
                     <i class="fas fa-shopping-cart fa-2x text-warning"></i>
                 </div>
             </div>
         </div>
+
+        @* Products *@
         <div class="col-md-3">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Products</h5>
-                    <p class="card-text">@Model?.TotalProducts ?? 0</p>
+                    <p class="card-text">@(Model?.TotalProducts ?? 0)</p>
                     <i class="fas fa-box fa-2x text-info"></i>
                 </div>
             </div>
         </div>
+
+        @* Users *@
         <div class="col-md-3">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Users</h5>
-                    <p class="card-text">@Model?.TotalUsers ?? 0</p>
+                    <p class="card-text">@(Model?.TotalUsers ?? 0)</p>
                     <i class="fas fa-users fa-2x text-danger"></i>
                 </div>
             </div>
@@ -61,13 +73,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var order in Model?.RecentOrders ?? new List<E_commerceWebsite.Data.Entities.OrderAdmin>())
+                    @foreach (var order in Model?.RecentOrders ?? Enumerable.Empty<OrderAdmin>())
                     {
                         <tr>
                             <td>@order.OrderId</td>
                             <td>@order.CustomerName</td>
                             <td>@order.OrderDate.ToShortDateString()</td>
-                            <td><span class="badge badge-@(order.Status == "Completed" ? "success" : "warning")">@order.Status</span></td>
+                            <td class="@(order.Status == "Completed" ? "table-success" : "table-warning")">@order.Status</td>
                             <td>₦@order.TotalAmount.ToString("N0")</td>
                         </tr>
                     }
@@ -91,14 +103,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var user in Model?.RecentUsers ?? new List<E_commerceWebsite.Data.AdminUser>())
+                    @foreach (var user in Model?.RecentUsers ?? Enumerable.Empty<User>())
+
                     {
                         <tr>
-                            <td>@user.UserId</td>
-                            <td>@user.Name</td>
-                            <td>@user.Email</td>
-                            <td>@user.DateRegistered.ToShortDateString()</td>
-                            <td><span class="badge badge-@(user.Status == "Active" ? "success" : "warning")">@user.Status</span></td>
+                            <td>@(user?.Id)</td>
+                            <td>@(user?.FullName ?? "Unknown")</td>
+                            <td>@(user?.Email ?? "N/A")</td>
+                            <td>@(user?.DateRegistered.ToShortDateString() ?? "N/A")</td>
+                            <td>
+                                <span class="badge badge-@(user?.Status == "Active" ? "success" : "warning")">
+                                    @(user?.Status ?? "Inactive")
+                                </span>
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -120,13 +137,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var product in Model?.RecentProducts ?? new List<E_commerceWebsite.Data.AdminProduct>())
+                    @foreach (var product in Model?.RecentProducts ?? Enumerable.Empty<AdminProduct>())
                     {
                         <tr>
-                            <td>@product.Id</td>
-                            <td>@product.Name</td>
-                            <td>₦@product.Price.ToString("N0")</td>
-                            <td>@product.Category</td>
+                            <td>@(product?.Id.ToString() ?? "N/A")</td>
+                            <td>@(product?.Name ?? "Unknown")</td>
+                            <td>₦@(product?.Price.ToString("N0") ?? "0")</td>
+                            <td>@(product?.Category ?? "N/A")</td>
                         </tr>
                     }
                 </tbody>

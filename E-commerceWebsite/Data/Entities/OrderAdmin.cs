@@ -2,7 +2,7 @@
 namespace E_commerceWebsite.Data.Entities
 {
 
-    using E_commerceWebsite.Data.Entities;
+    
     using System.ComponentModel.DataAnnotations;
 
     public class OrderAdmin

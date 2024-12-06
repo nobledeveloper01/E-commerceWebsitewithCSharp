@@ -22,10 +22,7 @@ namespace E_commerceWebsite.Areas.Admin.Controllers
             _context = context;
         }
 
-        public IActionResult Dashboard()
-        {
-            return View("~/Views/Admin/Index.cshtml");
-        }
+        
 
         public IActionResult ProductManagement()
         {

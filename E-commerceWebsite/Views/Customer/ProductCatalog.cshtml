@@ -39,11 +39,11 @@
 <div class="container my-4">
     <div class="row">
         <!-- Product Cards (Center) -->
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="row">
                 @foreach (var product in Model.Products)
                 {
-                    <div class="col-md-6 mb-4">
+                    <div class="col-md-4 mb-4">
                         <div class="card h-100 rounded-3 shadow-lg">
                             <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" />
                             <div class="card-body">
@@ -58,7 +58,7 @@
             </div>
         </div>
 
-        <!-- Filter Sidebar (Right) -->
+      @*   <!-- Filter Sidebar (Right) -->
         <div class="col-md-4 shadow-lg p-5">
             <h5>Filters</h5>
             <form method="get" asp-action="ProductCatalog" asp-controller="Product" asp-area="Customer">
@@ -86,7 +86,7 @@
                 <!-- Apply Filters Button -->
                 <button type="submit" class="btn btn-dark mt-4 w-100">Apply Filters</button>
             </form>
-        </div>
+        </div> *@
 
     </div>
 </div>

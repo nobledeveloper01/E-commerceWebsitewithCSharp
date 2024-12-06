@@ -3,6 +3,11 @@
     ViewData["Title"] = "Login";
 }
 
+@{
+    var successMessage = TempData["Success"] as string;
+    var errorMessage = TempData["Error"] as string;
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -74,7 +79,27 @@
             // Allow form submission
             return true;
         }
-               
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+      
+
+        @if (errorMessage != null)
+        {
+            <text>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: '@errorMessage'
+                    });
+            </text>
+        }
+            });
     </script>
+
+    
+
+               
+   
 </body>
 </html>

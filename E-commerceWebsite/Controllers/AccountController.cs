@@ -25,19 +25,19 @@ namespace E_commerceWebsite.Controllers
         [HttpGet]
         public IActionResult Register() => View();
 
+
         [HttpPost]
         public async Task<IActionResult> Register(string fullName, string username, string email, string password, string confirmPassword)
         {
             if (password != confirmPassword)
             {
                 TempData["Error"] = "Passwords do not match.";
-                return View();
+                return RedirectToAction("Register");
             }
 
             try
             {
                 await _userService.RegisterAsync(fullName, username, email, password);
-                TempData["Success"] = "Registration successful!";
                 return RedirectToAction("Login");
             }
             catch (ArgumentException ex)
@@ -49,56 +49,54 @@ namespace E_commerceWebsite.Controllers
                 TempData["Error"] = "An unexpected error occurred.";
             }
 
-            return View();
+            return RedirectToAction("Register");
         }
+
 
         [HttpGet]
         public IActionResult Login() => View();
 
+
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            // Validate inputs
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
                 TempData["Error"] = "Username and password are required.";
-                return View();
+                return RedirectToAction("Login");
             }
 
             try
             {
-                // Assuming your user service handles login by username now
                 var user = await _userService.LoginAsync(username, password);
                 if (user == null)
                 {
                     TempData["Error"] = "Invalid credentials.";
-                    return View();
+                    return RedirectToAction("Login");
                 }
 
-                // Save user session data as claims
                 await SetUserClaims(user);
 
-                // Role-based redirect
+                
                 if (user.Role == "Admin")
                 {
-                    TempData["Success"] = "Login Successful.";
-                    return RedirectToAction("Dashboard", "Product", new { area = "Admin" });
+                    return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
                 }
                 else if (user.Role == "User")
                 {
-                    TempData["Success"] = "Login Successful, Continue to shopping.";
                     return RedirectToAction("Index", "Product", new { area = "Customer" });
                 }
 
                 TempData["Error"] = "Unauthorized role.";
-                return View();
+                return RedirectToAction("Login");
             }
             catch
             {
                 TempData["Error"] = "An error occurred during login.";
-                return View();
+                return RedirectToAction("Login");
             }
         }
+
 
 
         private async Task SetUserClaims(User user)
@@ -108,9 +106,9 @@ namespace E_commerceWebsite.Controllers
                 // Create the list of claims to be used for authentication
                 var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),  // Unique user ID
-            new Claim(ClaimTypes.Name, user.Username),               // Username
-            new Claim(ClaimTypes.Role, user.Role)                    // User role (e.g., Admin, User)
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),  
+            new Claim(ClaimTypes.Name, user.Username),               
+            new Claim(ClaimTypes.Role, user.Role)                    
         };
 
                 // Create a ClaimsIdentity based on the claims
@@ -154,6 +152,24 @@ namespace E_commerceWebsite.Controllers
         {
             return View();
         }
+
+        public async Task<IActionResult> LogOut()
+        {
+            try
+            {
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+                // Pass a logout message via TempData
+                TempData["SwalMessage"] = "You have been logged out successfully!";
+                return RedirectToAction("Login");
+            }
+            catch
+            {
+                TempData["SwalMessage"] = "An error occurred during logout.";
+                return RedirectToAction("Login");
+            }
+        }
+
 
         public IActionResult EditProfile()
         {

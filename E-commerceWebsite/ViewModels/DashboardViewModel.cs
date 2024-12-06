@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
-using E_commerceWebsite.Data;
-using E_commerceWebsite.Data.Entities;
+﻿
+    using E_commerceWebsite.Data.Entities;
+    using E_commerceWebsite.Data;
+
 
 namespace E_commerceWebsite.ViewModels
 {

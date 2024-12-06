@@ -3,6 +3,7 @@ using System.Linq;
 using E_commerceWebsite.Data.Entities;
 using E_commerceWebsite.Data;
 using E_commerceWebsite.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_commerceWebsite.Controllers.Admin
 {
@@ -15,17 +16,24 @@ namespace E_commerceWebsite.Controllers.Admin
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var totalSales = _context.Orders
+            var totalSales = await _context.Orders
                 .Where(o => o.Status == "Completed")
-                .Sum(o => (decimal?)o.TotalAmount) ?? 0;
+                .SumAsync(o => (decimal?)o.TotalAmount) ?? 0;
 
-            var totalOrders = _context.Orders.Count();
-            var totalProducts = _context.Products.Count();
-            var totalUsers = _context.Users.Count();
+            var totalOrders = await _context.Orders.CountAsync();
+            var totalProducts = await _context.AdminProducts.CountAsync();
+            var totalUsers = await _context.Users.CountAsync();
 
-            var recentOrders = _context.Orders
+
+            Console.WriteLine("totalorder", totalOrders);
+            Console.WriteLine("totalsale", totalSales);
+            Console.WriteLine("totalorder", totalProducts);
+            Console.WriteLine("totalorder", totalUsers);
+
+
+            var recentOrders = await _context.Orders
                 .OrderByDescending(o => o.OrderDate)
                 .Take(10)
                 .Select(o => new OrderAdmin
@@ -33,27 +41,35 @@ namespace E_commerceWebsite.Controllers.Admin
                     OrderId = o.OrderId ?? "N/A",
                     CustomerName = o.CustomerName ?? "Unknown",
                     OrderDate = o.OrderDate,
-                    Status = o.Status,
+                    Status = o.Status ?? "Pending",
                     TotalAmount = o.TotalAmount
                 })
-                .ToList();
+                .ToListAsync();
 
-            var recentUsers = _context.Users
+            var recentUsers = await _context.Users
                 .OrderByDescending(u => u.DateRegistered)
                 .Take(10)
-                .ToList();
+                .Select(u => new User
+                {
+                    Id = u.Id,
+                    FullName = u.FullName ?? "Unknown",
+                    Email = u.Email ?? "N/A",
+                    DateRegistered = u.DateRegistered,
+                    Status = u.Status ?? "Inactive"
+                })
+                .ToListAsync();
 
-            var recentProducts = _context.Products
+            var recentProducts = await _context.AdminProducts
                 .OrderByDescending(p => p.Id)
                 .Take(10)
                 .Select(p => new AdminProduct
                 {
                     Id = p.Id,
-                    Name = p.Name,
+                    Name = p.Name ?? "Unknown",
                     Price = p.Price,
-                   
+                    Category = p.Category ?? "N/A"
                 })
-                .ToList();
+                .ToListAsync();
 
             var dashboardData = new DashboardViewModel
             {
@@ -66,7 +82,9 @@ namespace E_commerceWebsite.Controllers.Admin
                 RecentProducts = recentProducts
             };
 
-            return View(dashboardData);
+            return View("~/Views/Admin/Index.cshtml", dashboardData);
         }
+
+
     }
 }

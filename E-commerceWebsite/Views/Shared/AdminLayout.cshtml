@@ -74,7 +74,7 @@
             <h5 class="text-center mb-5">Admin Dashboard</h5>
             <ul class="nav flex-column">
                 <li class="nav-item mb-4">
-                    <a href="@Url.Action("Dashboard", "Product", new { area = "Admin" })" class="nav-link">
+                    <a href="@Url.Action("Index", "Dashboard", new { area = "Admin" })" class="nav-link">
                         <i class="fas fa-store mr-2"></i> Dashboard
                     </a>
                 </li>
@@ -98,7 +98,7 @@
             <hr class="bg-light">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a href="@Url.Action("Logout", "Profile", new { area = "Account" })" class="nav-link">
+                    <a href="@Url.Action("Logout", "Account", new { area = "Account" })" class="nav-link">
                         <i class="fas fa-sign-out-alt mr-2"></i> Logout
                     </a>
                 </li>
