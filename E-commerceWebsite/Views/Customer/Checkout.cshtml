@@ -42,22 +42,25 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Customer Details</h5>
+                <h5 class="modal-title" id="checkoutModalLabel">Customer Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="customerForm">
+                <form id="customerForm" novalidate>
                     <div class="mb-3">
                         <label for="name">Name</label>
                         <input type="text" id="name" name="name" class="form-control" required />
+                        <div class="invalid-feedback">Please enter your name.</div>
                     </div>
                     <div class="mb-3">
                         <label for="email">Email</label>
                         <input type="email" id="email" name="email" class="form-control" required />
+                        <div class="invalid-feedback">Please enter a valid email address.</div>
                     </div>
                     <div class="mb-3">
                         <label for="shippingAddress">Shipping Address</label>
                         <textarea id="shippingAddress" name="shippingAddress" class="form-control" required></textarea>
+                        <div class="invalid-feedback">Please enter your shipping address.</div>
                     </div>
                 </form>
             </div>
@@ -79,7 +82,8 @@
     });
 
     document.getElementById('placeOrderButton').addEventListener('click', function () {
-        if (!document.getElementById('pickupOrDelivery').value) {
+        const deliveryOption = document.getElementById('pickupOrDelivery');
+        if (!deliveryOption.value) {
             alert('Please select a delivery option.');
             return;
         }
@@ -87,13 +91,19 @@
     });
 
     document.getElementById('submitOrderButton').addEventListener('click', function () {
-        const form = new FormData(document.getElementById('customerForm'));
-        form.append('pickupOrDelivery', document.getElementById('pickupOrDelivery').value);
+        const form = document.getElementById('customerForm');
+        if (!form.checkValidity()) {
+            form.classList.add('was-validated');
+            return;
+        }
+
+        const formData = new FormData(form);
+        formData.append('pickupOrDelivery', document.getElementById('pickupOrDelivery').value);
 
         fetch('@Url.Action("PlaceOrder", "Cart")', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(Object.fromEntries(form.entries()))
+            body: JSON.stringify(Object.fromEntries(formData.entries()))
         })
             .then(response => response.json())
             .then(data => {

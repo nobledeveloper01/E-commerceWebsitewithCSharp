@@ -48,7 +48,6 @@
                         <option value="">All</option>
                         <option value="active" selected="@Model.Status == " active"">Active</option>
                         <option value="inactive" selected="@Model.Status == " inactive"">Inactive</option>
-                    
                     </select>
                 </div>
                 <div class="col-md-6 mb-3">
@@ -87,8 +86,13 @@
                         <td><span class="badge @(user.Status == "Active" ? "bg-success" : "bg-danger")">@user.Status</span></td>
                         <td>@user.DateRegistered.ToString("yyyy-MM-dd")</td>
                         <td>
-                            <button class="btn btn-sm btn-primary view-user-btn">View</button>
-                            <button class="btn btn-sm btn-danger deactivate-user-btn">Deactivate</button>
+                           
+                            <form action="@Url.Action("DeactivateUser", "User", new { id = user.Id })" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-danger">Deactivate</button>
+                            </form>
+                            <form action="@Url.Action("ActivateUser", "User", new { id = user.Id })" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-success">Activate</button>
+                            </form>
                         </td>
                     </tr>
                 }
@@ -117,13 +121,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Handle user actions
-        document.querySelectorAll('.view-user-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                alert('View User Profile - Dynamic Modal Pending!');
-            });
-        });
-
+       
 
         document.querySelectorAll('.deactivate-user-btn, .activate-user-btn').forEach(button => {
             button.addEventListener('click', () => {

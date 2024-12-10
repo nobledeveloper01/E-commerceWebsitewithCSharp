@@ -4,41 +4,52 @@
     Layout = "~/Views/Shared/CustomerLayout.cshtml";
 }
 
-
 <h2>Your Cart</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Product</th>
-            <th>Color</th>
-            <th>Size</th>
-            <th>Quantity</th>
-            <th>Unit Price</th>
-            <th>Total Price</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-warning text-center" role="alert">
+        Your cart is empty. Add items to proceed to checkout.
+    </div>
+}
+else
+{
+    <table class="table">
+        <thead>
             <tr>
-                <td>@item.ProductName</td>
-                <td>@item.SelectedColor</td>
-                <td>@item.SelectedSize</td>
-                <td>@item.Quantity</td>
-                <td>₦@item.UnitPrice.ToString()</td>
-                <td>₦@item.TotalPrice.ToString()</td>
-                <td>
-                    <form method="post" action="@Url.Action("RemoveFromCart", "Cart")">
-                        <input type="hidden" name="cartItemId" value="@item.Id" />
-                        <button type="submit" class="btn btn-danger">Remove</button>
-                    </form>
-                </td>
+                <th>Product</th>
+                <th>Color</th>
+                <th>Size</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total Price</th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.SelectedColor</td>
+                    <td>@item.SelectedSize</td>
+                    <td>@item.Quantity</td>
+                    <td>₦@item.UnitPrice.ToString()</td>
+                    <td>₦@item.TotalPrice.ToString()</td>
+                    <td>
+                        <form method="post" action="@Url.Action("RemoveFromCart", "Cart")">
+                            <input type="hidden" name="cartItemId" value="@item.Id" />
+                            <button type="submit" class="btn btn-danger">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
-<a href="@Url.Action("Checkout", "Cart")" class="btn btn-primary">Proceed to Checkout</a>
-
+<a href="@Url.Action("Checkout", "Cart")"
+   class="btn btn-primary @(Model == null || !Model.Any() ? "disabled" : "")"
+@(Model == null || !Model.Any() ? "aria-disabled='true' tabindex='-1'" : "")>
+    Proceed to Checkout
+</a>

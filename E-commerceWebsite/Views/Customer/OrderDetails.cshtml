@@ -5,6 +5,45 @@
     Layout = "~/Views/Shared/CustomerLayout.cshtml";
 }
 
+<style>
+    .card {
+        border-radius: 10px;
+        overflow: hidden; /* Ensures content does not spill outside */
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0;
+        padding: 15px;
+        font-weight: bold;
+    }
+
+    .card-body {
+        max-width: 100%; /* Prevents the card from stretching beyond the viewport */
+        overflow-x: auto; /* Allows horizontal scrolling if the content overflows */
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+    thead.thead-dark th {
+        background-color: #343a40;
+        color: white;
+        white-space: nowrap; /* Ensures headers don’t wrap onto multiple lines */
+    }
+
+    tbody td {
+        white-space: nowrap; /* Prevents table cells from wrapping, making the table scroll horizontally instead */
+    }
+</style>
+
+<div>
+
 <h2>Order Details</h2>
 
 @if (Model == null || !Model.Any())
@@ -13,25 +52,38 @@
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Product Name</th>
-                <th>Quantity</th>
-                <th>Unit Price</th>
-                <th>Total Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var detail in Model)
-            {
-                <tr>
-                    <td>@detail.Product?.Name</td>
-                    <td>@detail.Quantity</td>
-                    <td>@detail.UnitPrice.ToString("C")</td>
-                    <td>₦@(detail.Quantity * detail.UnitPrice)</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <!-- Card wrapper for table -->
+    <div class="card mt-4 shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Order Details</h4>
+        </div>
+        <div class="card-body">
+            <!-- Responsive table wrapper -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Total Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var detail in Model)
+                        {
+                            <tr>
+                                <td>@detail.Product?.Name</td>
+                                <td>@detail.Quantity</td>
+                                <td>₦@detail.UnitPrice.ToString("N2")</td>
+                                <td>₦@((detail.Quantity * detail.UnitPrice).ToString("N2"))</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 }
+
+</div>

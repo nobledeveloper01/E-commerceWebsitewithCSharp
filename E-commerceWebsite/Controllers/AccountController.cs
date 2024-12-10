@@ -75,9 +75,15 @@ namespace E_commerceWebsite.Controllers
                     return RedirectToAction("Login");
                 }
 
+                // Check if the user is inactive
+                if (user.Status == "Inactive")
+                {
+                    TempData["InactiveUser"] = true;
+                    return RedirectToAction("Login"); 
+                }
+
                 await SetUserClaims(user);
 
-                
                 if (user.Role == "Admin")
                 {
                     return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
@@ -96,6 +102,7 @@ namespace E_commerceWebsite.Controllers
                 return RedirectToAction("Login");
             }
         }
+
 
 
 
@@ -150,8 +157,23 @@ namespace E_commerceWebsite.Controllers
 
         public IActionResult Profile()
         {
-            return View();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                TempData["Error"] = "User not found.";
+                return RedirectToAction("Login");
+            }
+
+            var user = _context.Users.FirstOrDefault(u => u.Id.ToString() == userId);
+            if (user == null)
+            {
+                TempData["Error"] = "User not found.";
+                return RedirectToAction("Login");
+            }
+
+            return View(user);
         }
+
 
         public async Task<IActionResult> LogOut()
         {
@@ -171,9 +193,75 @@ namespace E_commerceWebsite.Controllers
         }
 
 
+        [HttpGet]
         public IActionResult EditProfile()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = _context.Users.FirstOrDefault(u => u.Id.ToString() == userId);
+
+            if (user == null)
+            {
+                TempData["Error"] = "User not found.";
+                return RedirectToAction("Profile");
+            }
+
+            return View(user);
+        }
+
+        [HttpPost]
+        public IActionResult EditProfile(string fullName, string email, string username)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = _context.Users.FirstOrDefault(u => u.Id.ToString() == userId);
+
+            if (user == null)
+            {
+                TempData["Error"] = "User not found.";
+                return RedirectToAction("Profile");
+            }
+
+            user.FullName = fullName;
+            user.Username = username;
+            user.Email = email;
+            _context.SaveChanges();
+
+            TempData["SwalMessage"] = "Profile updated successfully!";
+            return RedirectToAction("Profile");
+        }
+
+
+        [HttpGet]
+        public IActionResult ChangePassword()
         {
             return View();
         }
+
+        [HttpPost]
+        public IActionResult ChangePassword(string currentPassword, string newPassword, string confirmPassword)
+        {
+            if (newPassword != confirmPassword)
+            {
+                TempData["Error"] = "Passwords do not match.";
+
+                return View();
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = _context.Users.FirstOrDefault(u => u.Id.ToString() == userId);
+
+            if (user == null || _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, currentPassword) != PasswordVerificationResult.Success)
+            {
+                TempData["Error"] = "Current password is incorrect.";
+                return View();
+            }
+
+            user.PasswordHash = _passwordHasher.HashPassword(user, newPassword);
+            _context.SaveChanges();
+
+            TempData["SwalMessage"] = "Password changed successfully!";
+            return RedirectToAction("Profile");
+        }
+
+
     }
 }

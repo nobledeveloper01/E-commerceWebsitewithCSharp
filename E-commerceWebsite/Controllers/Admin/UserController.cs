@@ -42,8 +42,8 @@ namespace E_commerceWebsite.Controllers.Admin
 
             // Fetch the current page of users
             var users = await query
-                .Skip((page - 1) * pageSize) 
-                .Take(pageSize) 
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
             // In your action method
@@ -66,7 +66,7 @@ namespace E_commerceWebsite.Controllers.Admin
             };
 
             // Return the view with the model
-            return View("~/Views/Admin/UserManagement.cshtml",model);
+            return View("~/Views/Admin/UserManagement.cshtml", model);
         }
 
         private UserCounts MapToUserCounts(UserCountsViewModel viewModel)
@@ -77,6 +77,46 @@ namespace E_commerceWebsite.Controllers.Admin
                 InactiveUsers = viewModel.InactiveUsers,
                 Admins = viewModel.Admins
             };
+        }
+
+        public async Task<IActionResult> DeactivateUser(int id)
+        {
+            // Fetch user from the database
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Deactivate the user and save changes
+            user.Status = "Inactive";
+            await _context.SaveChangesAsync();
+
+            // Redirect back to the UserManagement page
+            return RedirectToAction("UserManagement");
+        }
+
+        public async Task<IActionResult> ActivateUser(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Activate the user and save changes
+            user.Status = "Active";
+            await _context.SaveChangesAsync();
+
+            // Redirect back to the UserManagement page
+            return RedirectToAction("UserManagement");
+        }
+
+
+        public async Task<IActionResult> UserComplains()
+        {
+            var contactMessages = await _context.ContactMessages.ToListAsync();
+            return View("~/Views/Admin/UserComplains.cshtml", contactMessages);
         }
     }
 }

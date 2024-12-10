@@ -1,14 +1,38 @@
-﻿@{
+﻿@model E_commerceWebsite.Data.User
+@{
     Layout = "~/Views/Shared/CustomerLayout.cshtml";
     ViewData["Title"] = "Profile";
 }
 
-<h2>Profile</h2>
-<div>
-    <p><strong>Username:</strong> Marvellous Bamisaye</p>
-    <p><strong>Email:</strong> test@gmail.com</p>
-</div>
-<div>
-    <a asp-action="EditProfile">Edit Profile</a> |
-    <a asp-action="ChangePassword">Change Password</a>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2 class="h4">@ViewData["Title"]</h2>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <p class="text-truncate">
+                            <strong>Username:</strong> @Model.Username
+                        </p>
+                        <p class="text-truncate">
+                            <strong>Email:</strong> @Model.Email
+                        </p>
+                        <p class="text-truncate">
+                            <strong>Full Name:</strong> @Model.FullName
+                        </p>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-12 col-sm-6">
+                            <a asp-action="EditProfile" class="btn btn-warning text-white w-100">Edit Profile</a>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <a asp-action="ChangePassword" class="btn btn-danger w-100">Change Password</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

@@ -2,11 +2,85 @@
     ViewData["Title"] = "About Us";
 }
 
-<body>
+<section class="about-us py-5">
     <div class="container">
-        <h2>About Us</h2>
-        <p>Welcome to our E-commerce Website. We aim to provide the best shopping experience for our customers.</p>
-        <p>Our team is dedicated to offering quality products and excellent customer service.</p>
-    </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="fw-bold mb-4">About Us</h2>
+                <p class="lead text-muted mb-4">
+                    Welcome to <span class="fw-bold text-primary">Our E-commerce Website</span>.
+                    Your one-stop shop for quality products, excellent customer service, and an unforgettable shopping experience.
+                </p>
 
-</body>
+                <h3 class="fw-bold mt-4 text-primary">Our Mission</h3>
+                <p class="text-muted">
+                    To deliver exceptional value through high-quality products, unmatched customer satisfaction, and innovative shopping solutions.
+                </p>
+
+                <h3 class="fw-bold mt-4 text-primary">Our Vision</h3>
+                <p class="text-muted">
+                    To become the most trusted and customer-centric e-commerce platform globally, setting new standards in product variety and service excellence.
+                </p>
+
+                <h3 class="fw-bold mt-4 text-primary">Why Choose Us?</h3>
+                <ul class="list-unstyled text-muted mb-4">
+                    <li><i class="fas fa-check-circle text-primary me-2"></i> Dedicated to providing top-notch customer satisfaction.</li>
+                    <li><i class="fas fa-check-circle text-primary me-2"></i> A diverse collection of high-quality, affordable products.</li>
+                    <li><i class="fas fa-check-circle text-primary me-2"></i> Secure and seamless online shopping experience.</li>
+                    <li><i class="fas fa-check-circle text-primary me-2"></i> Fast and reliable shipping to your doorstep.</li>
+                </ul>
+
+                <h3 class="fw-bold mt-4 text-primary">Customer Satisfaction</h3>
+                <p class="text-muted">
+                    At the heart of our company lies a commitment to our customers. We aim to ensure your satisfaction by offering easy returns,
+                    reliable support, and a platform that truly listens to your needs.
+                </p>
+
+                <hr class="my-4">
+                <p class="text-muted">
+                    Thank you for choosing us. Together, we build a better shopping experience!
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .about-us {
+        background: linear-gradient(45deg, #f9f9f9, #ffffff);
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h2, h3 {
+        color: #333;
+    }
+
+    .lead {
+        font-size: 1.2rem;
+    }
+
+    .fw-bold {
+        font-weight: 700;
+    }
+
+    .text-primary {
+        color: #007bff;
+    }
+
+    .list-unstyled li {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+        .list-unstyled li i {
+            font-size: 1.2rem;
+        }
+
+    hr {
+        border: 0;
+        height: 1px;
+        background: #eaeaea;
+        margin: 2rem 0;
+    }
+</style>

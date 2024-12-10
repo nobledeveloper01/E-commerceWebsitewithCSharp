@@ -2,75 +2,10 @@
 @{
     Layout = "~/Views/Shared/CustomerLayout.cshtml";
 }
+<link rel="stylesheet" href="@Url.Content("~/css/site.css")" asp-append-version="true" />
 
-<style>
-    .product-detail-page {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        padding: 20px;
-        gap: 20px;
-    }
 
-    .product-gallery {
-        flex: 1 1 40%;
-        max-width: 500px;
-    }
 
-        .product-gallery img {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-            object-fit: cover;
-        }
-
-    .product-info {
-        flex: 1 1 50%;
-        max-width: 600px;
-    }
-
-    .price {
-        font-size: 1.5rem;
-        color: green;
-    }
-
-    .original-price {
-        text-decoration: line-through;
-        color: grey;
-        margin-left: 10px;
-    }
-
-    .color-option {
-        margin: 5px;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        border: 2px solid #ccc;
-        cursor: pointer;
-    }
-
-    .size-option {
-        margin: 5px;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .quantity-selector input {
-        width: 60px;
-        padding: 5px;
-    }
-
-    .add-to-cart {
-        padding: 10px 20px;
-        background-color: #333;
-        color: white;
-        border: none;
-        cursor: pointer;
-        border-radius: 5px;
-    }
-</style>
 
 <div class="product-detail-page">
     <div class="product-gallery">
@@ -107,10 +42,10 @@
 
         <div class="quantity-selector">
             <h5>Quantity:</h5>
-            <input type="number" id="quantity" min="1" value="1" />
+            <input type="number" id="quantity" min="0" value="0" />
         </div>
 
-        <form method="post" asp-controller="Cart" asp-action="AddToCart" id="addToCartForm">
+        <form method="post" asp-controller="Cart" asp-action="AddToCart" id="addToCartForm" class="mt-5">
             <input type="hidden" name="productId" value="@Model.Id" />
             <input type="hidden" name="selectedColor" id="selectedColor" />
             <input type="hidden" name="selectedSize" id="selectedSize" />
