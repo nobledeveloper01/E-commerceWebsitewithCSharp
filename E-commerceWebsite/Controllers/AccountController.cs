@@ -75,26 +75,25 @@ namespace E_commerceWebsite.Controllers
                     return RedirectToAction("Login");
                 }
 
-                // Check if the user is inactive
                 if (user.Status == "Inactive")
                 {
                     TempData["InactiveUser"] = true;
-                    return RedirectToAction("Login"); 
+                    return RedirectToAction("Login");
                 }
 
                 await SetUserClaims(user);
 
-                if (user.Role == "Admin")
+                if (TempData["RedirectToCheckout"] != null)
                 {
-                    return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
-                }
-                else if (user.Role == "User")
-                {
-                    return RedirectToAction("Index", "Product", new { area = "Customer" });
+                    return RedirectToAction("Checkout", "Home");
                 }
 
-                TempData["Error"] = "Unauthorized role.";
-                return RedirectToAction("Login");
+                return user.Role switch
+                {
+                    "Admin" => RedirectToAction("Index", "Dashboard", new { area = "Admin" }),
+                    "User" => RedirectToAction("Index", "Product", new { area = "Customer" }),
+                    _ => RedirectToAction("Login")
+                };
             }
             catch
             {
@@ -102,7 +101,6 @@ namespace E_commerceWebsite.Controllers
                 return RedirectToAction("Login");
             }
         }
-
 
 
 
@@ -183,12 +181,12 @@ namespace E_commerceWebsite.Controllers
 
                 // Pass a logout message via TempData
                 TempData["SwalMessage"] = "You have been logged out successfully!";
-                return RedirectToAction("Login");
+                return RedirectToAction("Index", "Home");
             }
             catch
             {
                 TempData["SwalMessage"] = "An error occurred during logout.";
-                return RedirectToAction("Login");
+                return RedirectToAction("Index", "Home");
             }
         }
 

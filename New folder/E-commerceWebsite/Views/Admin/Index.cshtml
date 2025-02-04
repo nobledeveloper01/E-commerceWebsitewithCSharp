@@ -1,0 +1,153 @@
+﻿@model E_commerceWebsite.ViewModels.DashboardViewModel
+@using E_commerceWebsite.Data.Entities
+@using E_commerceWebsite.Data
+
+
+@{
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Welcome back, Admin!</h2>
+
+    <!-- Metrics Section -->
+    <div class="row text-center mb-5">
+        @* Total Sales *@
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Total Sales</h5>
+                    <p class="card-text text-success">₦@(Model?.TotalSales.ToString("N0") ?? "0")</p>
+                    <i class="fas fa-dollar-sign fa-2x text-primary"></i>
+                </div>
+            </div>
+        </div>
+
+        @* Orders *@
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Orders</h5>
+                    <p class="card-text">@(Model?.TotalOrders ?? 0)</p>
+                    <i class="fas fa-shopping-cart fa-2x text-warning"></i>
+                </div>
+            </div>
+        </div>
+
+        @* Products *@
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Products</h5>
+                    <p class="card-text">@(Model?.TotalProducts ?? 0)</p>
+                    <i class="fas fa-box fa-2x text-info"></i>
+                </div>
+            </div>
+        </div>
+
+        @* Users *@
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Users</h5>
+                    <p class="card-text">@(Model?.TotalUsers ?? 0)</p>
+                    <i class="fas fa-users fa-2x text-danger"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders Section -->
+    <div class="mb-5">
+        <h4 class="mb-3">Recent Orders</h4>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model?.RecentOrders ?? Enumerable.Empty<OrderAdmin>())
+                    {
+                        <tr>
+                            <td>@order.OrderId</td>
+                            <td>@order.CustomerName</td>
+                            <td>@order.OrderDate.ToShortDateString()</td>
+                            <td class="@(order.Status == "Completed" ? "table-success" : "table-warning")">@order.Status</td>
+                            <td>₦@order.TotalAmount.ToString("N0")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Recent Users Section -->
+    <div class="mb-5">
+        <h4 class="mb-3">Recent Users</h4>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>User ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Date Joined</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model?.RecentUsers ?? Enumerable.Empty<User>())
+
+                    {
+                        <tr>
+                            <td>@(user?.Id)</td>
+                            <td>@(user?.FullName ?? "Unknown")</td>
+                            <td>@(user?.Email ?? "N/A")</td>
+                            <td>@(user?.DateRegistered.ToShortDateString() ?? "N/A")</td>
+                            <td>
+                                <span class="badge badge-@(user?.Status == "Active" ? "success" : "warning")">
+                                    @(user?.Status ?? "Inactive")
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Recent Products Section -->
+    <div class="mb-5">
+        <h4 class="mb-3">Recent Products</h4>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Product ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in Model?.RecentProducts ?? Enumerable.Empty<AdminProduct>())
+                    {
+                        <tr>
+                            <td>@(product?.Id.ToString() ?? "N/A")</td>
+                            <td>@(product?.Name ?? "Unknown")</td>
+                            <td>₦@(product?.Price.ToString("N0") ?? "0")</td>
+                            <td>@(product?.Category ?? "N/A")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

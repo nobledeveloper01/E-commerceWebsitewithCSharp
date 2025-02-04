@@ -21,13 +21,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = "/Account/Login"; 
         options.LogoutPath = "/Account/Logout"; 
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30); 
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.SlidingExpiration = false;
+        options.Cookie.Name = "Ecommerce";
     });
-// Configure Session
 builder.Services.AddSession(options =>
 {
-    options.Cookie.Name = ".ECommerce.Session";
-    options.IdleTimeout = TimeSpan.FromSeconds(30);
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
 

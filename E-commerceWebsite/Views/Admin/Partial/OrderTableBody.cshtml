@@ -44,22 +44,45 @@ else
             <td><span class="badge bg-@(order.Status.ToLower())">@order.Status</span></td>
             <td>₦@order.TotalAmount</td>
             <td>
-                <button class="btn btn-sm btn-success status-btn" data-order-id="@order.OrderId" data-status="Completed">Mark Completed</button>
-                <button class="btn btn-sm btn-danger status-btn" data-order-id="@order.OrderId" data-status="Cancelled">Cancel</button>
+                @if (order.Status == "Pending")
+                {
+                    <button class="btn btn-sm btn-success status-btn"
+                            data-order-id="@order.OrderId"
+                            data-status="Completed">
+                        Mark Completed
+                    </button>
+                    <button class="btn btn-sm btn-danger status-btn"
+                            data-order-id="@order.OrderId"
+                            data-status="Cancelled">
+                        Cancel
+                    </button>
+                }
+                else
+                {
+                    <span class="text-muted">No actions available</span>
+                }
             </td>
         </tr>
     }
 }
 
-          
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.status-btn').forEach(button => {
             button.addEventListener('click', event => {
                 const orderId = event.target.getAttribute('data-order-id');
                 const status = event.target.getAttribute('data-status');
+                const row = event.target.closest('tr');
+                const currentStatus = row.querySelector('.badge').textContent;
 
-                if (!orderId || !status) return;
+                if (currentStatus !== 'Pending') {
+                    Swal.fire({
+                        title: 'Action not allowed',
+                        text: 'This order can no longer be modified',
+                        icon: 'error'
+                    });
+                    return;
+                }
 
                 Swal.fire({
                     title: `Are you sure you want to mark this order as ${status}?`,
@@ -75,32 +98,37 @@ else
                             },
                             body: JSON.stringify({ orderId, status }),
                         })
-                        .then(response => {
-                            if (!response.ok) {
-                                return response.json().then(error => {
-                                    throw new Error(error.message || 'Failed to update status');
+                            .then(response => {
+                                if (!response.ok) {
+                                    return response.json().then(error => {
+                                        throw new Error(error.message || 'Failed to update status');
+                                    });
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                Swal.fire({
+                                    title: 'Success',
+                                    text: data.message,
+                                    icon: 'success',
                                 });
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            Swal.fire({
-                                title: 'Success',
-                                text: data.message,
-                                icon: 'success',
-                            });
 
-                            const badge = event.target.closest('tr').querySelector('.badge');
-                            badge.className = `badge bg-${status.toLowerCase()}`;
-                            badge.textContent = status;
-                        })
-                        .catch(error => {
-                            Swal.fire({
-                                title: 'Error',
-                                text: error.message,
-                                icon: 'error',
+                                // Update UI
+                                const badge = row.querySelector('.badge');
+                                badge.className = `badge bg-${data.newStatus.toLowerCase()}`;
+                                badge.textContent = data.newStatus;
+
+                                // Remove action buttons
+                                const actionCell = row.querySelector('td:last-child');
+                                actionCell.innerHTML = '<span class="text-muted">No actions available</span>';
+                            })
+                            .catch(error => {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: error.message,
+                                    icon: 'error',
+                                });
                             });
-                        });
                     }
                 });
             });

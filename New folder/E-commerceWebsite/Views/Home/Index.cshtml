@@ -1,0 +1,283 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="bg-light">
+   
+        <!-- Hero Section -->
+        <div class="container-fluid py-5 px-5" style="background-image: url('@Url.Content("~/images/background.png")'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+            <div class="row align-items-center py-5" style="min-height: 500px;">
+                <div class="col-md-6 text-center text-md-start">
+                    <h1 class="display-4 fw-bold text-dark">FIND CLOTHES THAT MATCH YOUR STYLE</h1>
+                    <p class="lead text-secondary">Browse through our diverse range of meticulously crafted garments, designed to bring out your individuality and cater to your sense of style.</p>
+                    <a href="@Url.Action("Login", "Account")" class="btn btn-primary btn-lg mt-3 shadow-lg">Shop Now</a>
+                    <div class="row text-center mt-5">
+                        <div class="col-md-4">
+                            <h3 class="fw-bold text-primary">200+</h3>
+                            <p>International Brands</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h3 class="fw-bold text-primary">2,000+</h3>
+                            <p>High-Quality Products</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h3 class="fw-bold text-primary">30,000+</h3>
+                            <p>Happy Customers</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- Brand Logos Section -->
+    <div class="row justify-content-center text-center bg-dark p-5">
+        <div class="col-4 col-md-2 d-flex justify-content-center">
+            <img src="@Url.Content("~/images/versace.png")" alt="Versace" class="img-fluid mb-3 opacity-75">
+        </div>
+        <div class="col-4 col-md-2 d-flex justify-content-center">
+            <img src="@Url.Content("~/images/zara.png")" alt="Zara" class="img-fluid mb-3 opacity-75">
+        </div>
+        <div class="col-4 col-md-2 d-flex justify-content-center">
+            <img src="@Url.Content("~/images/gucci.png")" alt="Gucci" class="img-fluid mb-3 opacity-75">
+        </div>
+        <div class="col-4 col-md-2 d-flex justify-content-center">
+            <img src="@Url.Content("~/images/prada.png")" alt="Prada" class="img-fluid mb-3 opacity-75">
+        </div>
+        <div class="col-4 col-md-2 d-flex justify-content-center">
+            <img src="@Url.Content("~/images/calvin.png")" alt="Calvin Klein" class="img-fluid mb-3 opacity-75">
+        </div>
+    </div>
+
+    <!-- About Us Section -->
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center mb-4 mb-md-0">
+                <img src="@Url.Content("~/images/AboutUs.jpg")" class="img-fluid w-75 h-auto rounded shadow-lg" alt="About Us Image">
+            </div>
+            <div class="col-md-6 text-center text-md-start">
+                <h2 class="fw-bold text-primary">About Us</h2>
+                <p class="lead text-secondary mt-3">We are passionate about fashion that speaks to you. Our collection offers a variety of styles and options, ensuring there’s something for everyone. From trendy seasonal pieces to timeless classics, we uphold the highest quality standards.</p>
+                <p class="lead text-muted">Our mission is to help you express yourself through fashion that reflects your unique personality. Join our community and let us help you feel empowered and confident.</p>
+            </div>
+        </div>
+    </div>
+    <!-- Categories Section -->
+    <div class="container py-5">
+        <h2 class="text-center fw-bold text-primary">Categories</h2>
+        <div class="row mt-4">
+            <div class="col-md-3 mb-4 text-center">
+                <div class="card shadow-lg">
+                    <img src="@Url.Content("~/images/men-fashion.jpg")" class="card-img-top" alt="Men's Fashion">
+                    <div class="card-body">
+                        <h5 class="card-title">Men's Fashion</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4 text-center">
+                <div class="card shadow-lg">
+                    <img src="@Url.Content("~/images/women-fashion.jpg")" class="card-img-top" alt="Women's Fashion">
+                    <div class="card-body">
+                        <h5 class="card-title">Women's Fashion</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4 text-center">
+                <div class="card shadow-lg">
+                    <img src="@Url.Content("~/images/kids-fashion.jpg")" class="card-img-top" alt="Kids' Fashion">
+                    <div class="card-body">
+                        <h5 class="card-title">Kids' Fashion</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4 text-center">
+                <div class="card shadow-lg">
+                    <img src="@Url.Content("~/images/accessories.jpg")" class="card-img-top" alt="Accessories">
+                    <div class="card-body">
+                        <h5 class="card-title">Accessories</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Featured Products Section -->
+    <div class="container py-5">
+        <h2 class="text-center fw-bold text-primary">Featured Products</h2>
+        <div class="row mt-4">
+            <!-- Repeatable Product Cards with updated details -->
+
+            <div class="col-md-3 mb-4">
+                <div class="card shadow-lg">
+                    <img src="@Url.Content("~/images/elegant-necklace.jpg")" class="card-img-top" alt="Elegant Necklace">
+                    <div class="card-body">
+                        <h5 class="card-title">Elegant Necklace</h5>
+                        <p class="card-text text-secondary">₦12,500</p>
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-primary">View Product</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="card shadow-lg">
+                    <img src="@Url.Content("~/images/stylish-sunglasses.jpg")" class="card-img-top" alt="Stylish Sunglasses">
+                    <div class="card-body">
+                        <h5 class="card-title">Stylish Sunglasses</h5>
+                        <p class="card-text text-secondary">₦8,000</p>
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-primary">View Product</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="card shadow-lg">
+                    <img src="@Url.Content("~/images/fashionable-handbag.jpg")" class="card-img-top" alt="Fashionable Handbag">
+                    <div class="card-body">
+                        <h5 class="card-title">Fashionable Handbag</h5>
+                        <p class="card-text text-secondary">₦25,000</p>
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-primary">View Product</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="card shadow-lg">
+                    <img src="@Url.Content("~/images/trendy-sneakers.jpg")" class="card-img-top" alt="Trendy Sneakers">
+                    <div class="card-body">
+                        <h5 class="card-title">Trendy Sneakers</h5>
+                        <p class="card-text text-secondary">₦18,000</p>
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-primary">View Product</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="card shadow-lg">
+                    <img src="@Url.Content("~/images/classic-watch.jpg")" class="card-img-top" alt="Classic Watch">
+                    <div class="card-body">
+                        <h5 class="card-title">Classic Watch</h5>
+                        <p class="card-text text-secondary">₦40,000</p>
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-primary">View Product</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="card shadow-lg">
+                    <img src="@Url.Content("~/images/chic-earrings.jpg")" class="card-img-top" alt="Chic Earrings">
+                    <div class="card-body">
+                        <h5 class="card-title">Chic Earrings</h5>
+                        <p class="card-text text-secondary">₦5,000</p>
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-primary">View Product</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="card shadow-lg">
+                    <img src="@Url.Content("~/images/designer-belt.jpg")" class="card-img-top" alt="Designer Belt">
+                    <div class="card-body">
+                        <h5 class="card-title">Designer Belt</h5>
+                        <p class="card-text text-secondary">₦10,000</p>
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-primary">View Product</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="card shadow-lg">
+                    <img src="@Url.Content("~/images/luxurious-perfume.jpg")" class="card-img-top" alt="Luxurious Perfume">
+                    <div class="card-body">
+                        <h5 class="card-title">Luxurious Perfume</h5>
+                        <p class="card-text text-secondary">₦30,000</p>
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-primary">View Product</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Testimonials Section -->
+    <div class="container py-5 text-center">
+        <h2 class="fw-bold text-primary">What Our Customers Say</h2>
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm">
+                    <p>"Absolutely love the quality of clothes. The service is fantastic!"</p>
+                    <h6 class="fw-bold">- Emily R.</h6>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm">
+                    <p>"A seamless shopping experience with a wonderful collection."</p>
+                    <h6 class="fw-bold">- John D.</h6>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm">
+                    <p>"Their customer service is top-notch. Highly recommend!"</p>
+                    <h6 class="fw-bold">- Sarah K.</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Us Section -->
+    <div class="container py-5 bg-light">
+        <h2 class="text-center fw-bold text-primary">Contact Us</h2>
+        <p class="text-center text-secondary mb-5">
+            We'd love to hear from you! Whether you have a question, feedback, or need assistance, feel free to reach out.
+        </p>
+        <div class="row g-4">
+            <!-- Contact Form -->
+            <div class="col-md-6">
+                <div class="p-4 shadow-sm rounded bg-white">
+                    <form>
+                        <div class="mb-3">
+                            <label for="name" class="form-label fw-semibold">Name</label>
+                            <input type="text" class="form-control" id="name" placeholder="Your Name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-semibold">Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="Your Email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label fw-semibold">Message</label>
+                            <textarea class="form-control" id="message" rows="4" placeholder="Your Message"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <!-- Contact Details -->
+            <div class="col-md-6">
+                <div class="p-4 shadow-sm rounded bg-white h-100">
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-geo-alt-fill text-primary me-2"></i>Our Address
+                    </h5>
+                    <p class="text-muted">123 Fashion Street, New York, NY 10001, USA</p>
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-envelope-fill text-primary me-2"></i>Email
+                    </h5>
+                    <p class="text-muted">support@fashionstore.com</p>
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-telephone-fill text-primary me-2"></i>Phone
+                    </h5>
+                    <p class="text-muted">+1 800 123 4567</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<style>
+    .text-justify {
+        text-align: justify;
+    }
+</style>

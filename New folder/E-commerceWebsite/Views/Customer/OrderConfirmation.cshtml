@@ -1,0 +1,115 @@
+﻿@using E_commerceWebsite.Data.Entities
+@model E_commerceWebsite.ViewModels.OrderConfirmationViewModel
+
+@{
+    Layout = "~/Views/Shared/CustomerLayout.cshtml";
+}
+
+@{
+    ViewData["Title"] = "Order Confirmation";
+    var orderId = Model.OrderId;
+    var orderDetails = Model.OrderDetails;
+    var totalAmount = orderDetails.Sum(detail => detail.TotalPrice);
+    var isDelivery = Model.PickupOrDelivery == "delivery";
+    if (isDelivery)
+    {
+        totalAmount += 4000; // Add delivery fee if delivery is selected
+    }
+}
+
+<div class=" mt-5">
+    <!-- Header -->
+    <div class="text-center">
+        <h2 class="text-primary">
+            <i class="bi bi-check-circle-fill me-2"></i>Order Confirmation
+        </h2>
+    </div>
+
+    @if (orderDetails != null && orderDetails.Count > 0)
+    {
+        <!-- Success Message -->
+        <div class="alert alert-success mt-4 text-center">
+            <h4 class="alert-heading">Thank you for your order!</h4>
+            <p>
+                Your order has been placed successfully. Your <strong>Order ID</strong> is:
+                <strong class="text-success">@orderId</strong>.
+                Please send your payment to the account below and use your <strong>Order ID</strong> as the reference.
+            </p>
+        </div>
+
+        <!-- Bank Details -->
+        <div class="alert alert-info text-center">
+            <h5 class="alert-heading">Bank Details:</h5>
+            <ul class="list-unstyled mb-0">
+                <li><strong>Account:</strong> 1234567890</li>
+                <li><strong>Bank:</strong> Global Bank</li>
+                <li><strong>Account Name:</strong> Marvellous Bamisaye</li>
+            </ul>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="card mt-4 shadow">
+            <div class="card-header bg-primary text-white">
+                <h4>Order Summary</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Total Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var detail in orderDetails)
+                            {
+                                <tr>
+                                    <td>@detail.Product.Name</td>
+                                    <td>@detail.Quantity</td>
+                                    <td>₦@detail.UnitPrice.ToString("N2")</td>
+                                    <td>₦@detail.TotalPrice.ToString("N2")</td>
+                                </tr>
+                            }
+                            @if (isDelivery)
+                            {
+                                <tr class="table-secondary">
+                                    <td colspan="3"><strong>Delivery Fee</strong></td>
+                                    <td>₦4000.00</td>
+                                </tr>
+                            }
+                            <tr class="table-info">
+                                <td colspan="3"><strong>Total Amount</strong></td>
+                                <td><strong>₦@totalAmount.ToString("N2")</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mt-4 mb-4">
+            <button class="btn btn-success w-100 w-md-auto"
+                    onclick="window.location.href='@Url.Action("ProductCatalog", "Product", new { area = "Customer" })'">
+                <i class="bi bi-arrow-left-circle me-2"></i>
+                Back to Product Catalog
+            </button>
+            <button class="btn btn-primary w-100 w-md-auto"
+                    onclick="window.location.href='@Url.Action("OrderHistory", "Order")'">
+                <i class="bi bi-journal-text me-2"></i>
+                Go to Order History
+            </button>
+        </div>
+    }
+    else
+    {
+        <!-- Error Message -->
+        <div class="alert alert-danger mt-4 text-center">
+            <h4 class="alert-heading">No Order Details Found!</h4>
+            <p>It seems like there was an issue with your order. Please contact support or try again later.</p>
+        </div>
+    }
+</div>

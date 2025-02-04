@@ -103,7 +103,7 @@
             <hr class="bg-light">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a href="@Url.Action("Logout", "Account", new { area = "Account" })" class="nav-link">
+                    <a href="@Url.Action("Index", "Home")" class="nav-link">
                         <i class="fas fa-sign-out-alt mr-2"></i> Logout
                     </a>
                 </li>
@@ -113,11 +113,9 @@
         <!-- Main Content Area -->
         <div class="flex-grow-1 main-content">
             <!-- Header -->
-            <header class="header">
-                <div class="search-bar">
-                    <input type="text" placeholder="Search products...">
-                </div>
-                <div>
+            <header class="header d-flex justify-content-end">
+              
+                <div class="">
                     <i class="fas fa-bell"></i>
                 </div>
             </header>

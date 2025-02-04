@@ -1,0 +1,172 @@
+/*html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+*/
+
+
+
+.product-detail-page {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 20px;
+    gap: 20px;
+}
+
+.product-gallery {
+    flex: 1 1 100%; /* Full width by default */
+    max-width: 100%; /* Ensure no overflow */
+}
+
+    .product-gallery img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+
+.product-info {
+    flex: 1 1 100%; /* Full width by default */
+    max-width: 100%;
+}
+
+.price {
+    font-size: 1.5rem;
+    color: green;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: grey;
+    margin-left: 10px;
+}
+
+.color-option {
+    margin: 5px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    cursor: pointer;
+}
+
+.size-option {
+    margin: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.quantity-selector input {
+    width: 60px;
+    padding: 5px;
+}
+
+.add-to-cart {
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+    .product-detail-page {
+        flex-wrap: nowrap;
+    }
+
+    .product-gallery {
+        flex: 1 1 40%; /* Adjust for tablet and above */
+        max-width: 500px;
+    }
+
+    .product-info {
+        flex: 1 1 50%; /* Adjust for tablet and above */
+        max-width: 600px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .price {
+        font-size: 2rem; /* Larger font size for bigger screens */
+    }
+}
+
+
+.price {
+    font-size: 1.2rem;
+    color: green;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: grey;
+    margin-left: 10px;
+}
+
+.btn-group {
+    display: flex; /* Default to flex for larger screens */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Prevent line breaks */
+    flex-wrap: nowrap; /* Avoid wrapping to the next line */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile */
+    padding: 0 15px; /* Add padding inside the group */
+    box-sizing: border-box; /* Include padding in width calculations */
+}
+
+    .btn-group button {
+        flex-shrink: 0; /* Prevent shrinking */
+        margin-right: 10px; /* Add spacing between buttons */
+        white-space: nowrap; /* Prevent text wrapping */
+    }
+
+@media (max-width: 576px) {
+    .btn-group {
+        display: grid; /* Switch to grid layout for smaller screens */
+        grid-template-columns: repeat(2, 1fr); /* 2 equal columns */
+        gap: 10px; /* Add spacing between grid items */
+        padding: 0 10px; /* Reduce padding for smaller screens */
+    }
+
+        .btn-group button {
+            margin-right: 0; /* Reset right margin (gap handles spacing) */
+            white-space: normal; /* Allow text wrapping */
+        }
+}
+
+
+.card-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .price {
+        font-size: 1rem;
+    }
+
+    .card-title,
+    .card-text {
+        font-size: 0.9rem;
+    }
+}

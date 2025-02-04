@@ -1,0 +1,95 @@
+﻿@using E_commerceWebsite.Data.Entities
+@model List<OrderAdmin>
+@{
+    Layout = "~/Views/Shared/CustomerLayout.cshtml";
+}
+
+<style>
+    .card {
+        border-radius: 10px;
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0;
+        padding: 15px;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .badge {
+        font-size: 0.85em;
+        padding: 5px 10px;
+    }
+
+</style>
+
+
+<h2>Order History</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <p>No orders found.</p>
+}
+else
+{
+    <!-- Card wrapper for better aesthetics -->
+    <div class="card mt-4 shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Order History</h4>
+        </div>
+        <div class="card-body">
+            <!-- Responsive table wrapper -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Total Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+                                <td>@order.OrderId</td>
+                                <td>@order.OrderDate.ToString("dd MMM yyyy")</td>
+                                <td>
+                                    <span class="badge @GetStatusClass(order.Status)">
+                                        @order.Status
+                                    </span>
+                                </td>
+                                <td>₦@order.TotalAmount.ToString("N2")</td>
+                                <td>
+                                    <a href="@Url.Action("OrderDetails", "Customer", new { orderId = order.OrderId })" class="btn btn-primary btn-sm">
+                                        View Details
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    @functions {
+        public string GetStatusClass(string status)
+        {
+            return status.ToLower() switch
+            {
+                "completed" => "badge-success",
+                "pending" => "badge-warning",
+                "canceled" => "badge-danger",
+                _ => "badge-secondary"
+            };
+        }
+    }
+
+</script>

@@ -1,0 +1,392 @@
+﻿@{
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+    ViewData["Title"] = "Admin Dashboard - Product Management";
+}
+
+<style>
+    /* General Body Styling */
+    body {
+        background-color: #f5f7fa;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Card Styling */
+    .card {
+        background: linear-gradient(145deg, #e3e6f3, #ffffff);
+        border-radius: 20px;
+        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        text-align: center;
+        transition: transform 0.3s ease-in-out;
+    }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card h5 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #4a4e69;
+        }
+
+        .card p {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #22223b;
+        }
+
+    /* Form Styling */
+    .form-container {
+        background-color: #ffffff;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+        .form-container h4 {
+            color: #495057;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+    .form-group label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 10px;
+        display: inline-block;
+    }
+
+    .form-control, .form-control-file {
+        border-radius: 10px;
+        padding: 10px;
+        border: 1px solid #ced4da;
+    }
+
+    .btn {
+        border-radius: 8px;
+        font-size: 1rem;
+        padding: 12px 20px;
+    }
+
+    .btn-primary {
+        background-color: #4a4e69;
+        border: none;
+        color: #fff;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: #22223b;
+        }
+
+    .btn-secondary {
+        background-color: #9a8c98;
+        color: #fff;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-secondary:hover {
+            background-color: #6d6875;
+        }
+
+    /* Product Item Styling */
+    .product-item {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .delete-product {
+        background-color: #e63946 !important;
+        border-color: #e63946 !important;
+    }
+</style>
+
+<div class="container mt-5">
+    <!-- Heading -->
+    <h2 class="text-center mb-5 text-dark fw-bold">Product Management Dashboard</h2>
+
+    <!-- Cards Section -->
+    <div class="row mb-5">
+        <div class="col-md-3 ">
+            <div class="card" data-category="men-wear">
+                <h5>Men's Wear</h5>
+                <p>0</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card" data-category="women-wear">
+                <h5>Women's Wear</h5>
+                <p>0</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card" data-category="kids-wear">
+                <h5>Kid's Wear</h5>
+                <p>0</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card" data-category="accessories">
+                <h5>Accessories</h5>
+                <p>0</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Products Form Section -->
+    <div class="form-container">
+        <h4>Add New Products</h4>
+        <form id="addProductsForm">
+            <div id="productContainer">
+                <div class="product-item">
+                    <h5 class="d-flex justify-content-between align-items-center">
+                        Product 1
+                        <button type="button" class="btn btn-sm btn-danger delete-product" disabled>Delete</button>
+                    </h5>
+                    <div class="form-group mb-3">
+                        <label>Product Name</label>
+                        <input type="text" class="form-control" name="name" placeholder="Enter product name" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Description</label>
+                        <textarea class="form-control" name="description" rows="3" placeholder="Enter product description" required></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6 mb-3">
+                            <label>Price</label>
+                            <input type="number" class="form-control" name="price" placeholder="Enter price" required>
+                        </div>
+                        <div class="form-group col-md-6 mb-3">
+                            <label>Discounted Price</label>
+                            <input type="number" class="form-control" name="discountedPrice" placeholder="Enter discounted price">
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Category</label>
+                        <select class="form-control" name="category" required>
+                            <option value="men-wear">Men's Wear</option>
+                            <option value="women-wear">Women's Wear</option>
+                            <option value="kids-wear">Kid's Wear</option>
+                            <option value="accessories">Accessories</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6 mb-3">
+                            <label>Colors (comma-separated)</label>
+                            <input type="text" class="form-control" name="colors" placeholder="e.g., Red, Blue, Green">
+                        </div>
+                        <div class="form-group col-md-6 mb-3">
+                            <label>Sizes (comma-separated)</label>
+                            <input type="text" class="form-control" name="sizes" placeholder="e.g., S, M, L, XL">
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Upload Image</label>
+                        <input type="file" class="form-control-file" name="image" accept="image/*" required>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between mt-4">
+                <button type="button" class="btn btn-secondary" id="addProductButton">Add Another Product</button>
+                <button type="submit" class="btn btn-primary">Submit Products</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const productContainer = document.getElementById('productContainer');
+        const addProductButton = document.getElementById('addProductButton');
+        const addProductsForm = document.getElementById('addProductsForm');
+        const productsContainer = document.getElementById('productsContainer');
+
+        let productCount = 1;
+        let deletedProductNumbers = []; 
+
+        // Add another product
+        if (addProductButton) {
+            addProductButton.addEventListener('click', () => {
+                let productNumber = 1;
+
+                // Reuse deleted numbers if available
+                if (deletedProductNumbers.length > 0) {
+                    productNumber = deletedProductNumbers.shift();
+                } else {
+                    productNumber = productCount++;
+                }
+
+                const productHTML = `
+                        <div class="product-item mb-4 border p-3 rounded shadow-sm" data-product-number="${productNumber}">
+                            <h5 class="text-primary d-flex justify-content-between align-items-center">
+                                Product ${productNumber}
+                                <button type="button" class="btn btn-sm btn-danger delete-product">Delete</button>
+                            </h5>
+                            <div class="form-group">
+                                <label for="name">Product Name</label>
+                                <input type="text" class="form-control" name="name" placeholder="Enter product name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea class="form-control" name="description" rows="2" placeholder="Enter product description" required></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-3">
+                                    <label>Price</label>
+                                    <input type="number" class="form-control" name="price" placeholder="Enter price" required>
+                                </div>
+                                <div class="form-group col-md-6 mb-3">
+                                    <label>Discounted Price</label>
+                                    <input type="number" class="form-control" name="discountedPrice" placeholder="Enter discounted price">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="category">Category</label>
+                                <select class="form-control" name="category" required>
+                                    <option value="men-wear">Men's Wear</option>
+                                    <option value="women-wear">Women's Wear</option>
+                                    <option value="kids-wear">Kid's Wear</option>
+                                    <option value="accessories">Accessories</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="colors">Colors (comma-separated)</label>
+                                <input type="text" class="form-control" name="colors" placeholder="e.g., Red, Blue, Green">
+                            </div>
+                            <div class="form-group">
+                                <label for="sizes">Sizes (comma-separated)</label>
+                                <input type="text" class="form-control" name="sizes" placeholder="e.g., S, M, L, XL">
+                            </div>
+                            <div class="form-group">
+                                <label for="image">Upload Image</label>
+                                <input type="file" class="form-control-file" name="image" accept="image/*" required>
+                            </div>
+                        </div>`;
+
+                if (productContainer) {
+                    productContainer.insertAdjacentHTML('beforeend', productHTML);
+                }
+
+                attachDeleteHandlers();
+            });
+        } else {
+            console.error('Add Product Button not found.');
+        }
+
+        // Handle delete
+        function attachDeleteHandlers() {
+            const deleteButtons = document.querySelectorAll('.delete-product');
+            deleteButtons.forEach((btn) => {
+                btn.onclick = () => {
+                    const productItem = btn.closest('.product-item');
+                    const productNumber = parseInt(productItem.dataset.productNumber, 10);
+
+                    // Add the deleted product number back to the list
+                    deletedProductNumbers.push(productNumber);
+                    deletedProductNumbers.sort((a, b) => a - b); // Keep it sorted
+
+                    productItem.remove();
+                };
+            });
+        }
+
+        attachDeleteHandlers();
+
+        // Add a new product template
+        if (addProductsForm) {
+            addProductsForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const productElements = document.querySelectorAll('.product-item');
+                const formData = new FormData();
+
+                productElements.forEach((item, index) => {
+                    const inputs = item.querySelectorAll('input, textarea, select');
+                    const imageInput = item.querySelector('[name="image"]');
+
+                    // Collect product data
+                    const product = {};
+                    inputs.forEach(input => {
+                        if (input.name !== 'image') {
+                            product[input.name] = input.value;
+                        }
+                    });
+
+                    // Add product JSON
+                    formData.append('products', JSON.stringify(product));
+
+                    // Add image file
+                    if (imageInput.files[0]) {
+                        formData.append('images', imageInput.files[0]);
+                    }
+                });
+
+                // Submit form data
+                try {
+                    const response = await fetch('/Admin/Product/UploadProducts', {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    if (response.ok) {
+                        // Success: Show a success message using Swal
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Products uploaded successfully!',
+                            text: 'Your products have been uploaded successfully.',
+                        }).then(() => {
+                            window.location.reload();  // Reload page or update the UI
+                        });
+                    } else {
+                        // Error: Show an error message using Swal
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error uploading products',
+                            text: 'There was an issue uploading the products. Please try again.',
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error submitting form:', error);
+                    // Error handling: Show an error message using Swal
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error uploading products',
+                        text: 'An unexpected error occurred. Please try again later.',
+                    });
+                }
+            });
+        } else {
+            console.error('Form not found.');
+        }
+
+    });
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('/Admin/Product/GetProductMetrics')
+            .then(response => response.json())
+            .then(data => {
+                document.querySelector('.card[data-category="men-wear"] p').innerText = data.mensWear;
+                document.querySelector('.card[data-category="women-wear"] p').innerText = data.womensWear;
+                document.querySelector('.card[data-category="kids-wear"] p').innerText = data.kidsWear;
+                document.querySelector('.card[data-category="accessories"] p').innerText = data.accessories;
+            })
+            .catch(error => {
+                console.error('Error fetching metrics:', error);
+              
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error fetching metrics',
+                    text: 'Unable to fetch product metrics at this time.',
+                });
+            });
+    });
+
+</script>

@@ -1,0 +1,89 @@
+﻿@model E_commerceWebsite.Data.User
+@{
+    Layout = "~/Views/Shared/CustomerLayout.cshtml";
+    ViewData["Title"] = "Edit Profile";
+}
+
+<div class=" mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2>@ViewData["Title"]</h2>
+                </div>
+                <div class="card-body">
+                    <form id="editProfileForm" asp-action="EditProfile" method="post">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username:</label>
+                            <input type="text"
+                                   id="username"
+                                   name="username"
+                                   class="form-control"
+                                   value="@Model.Username"
+                                   required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="fullName" class="form-label">Full Name:</label>
+                            <input type="text"
+                                   id="fullName"
+                                   name="fullName"
+                                   class="form-control"
+                                   value="@Model.FullName"
+                                   required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email"
+                                   id="email"
+                                   name="email"
+                                   class="form-control"
+                                   value="@Model.Email"
+                                   required />
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("editProfileForm");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent actual form submission
+
+            const username = document.getElementById("username").value.trim();
+            const fullName = document.getElementById("fullName").value.trim();
+            const email = document.getElementById("email").value.trim();
+
+            // Validate inputs
+            if (!username || !fullName || !email) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Validation Error",
+                    text: "All fields are required. Please fill them out.",
+                });
+                return;
+            }
+
+            
+
+            // If everything is valid, show success message and submit the form
+            Swal.fire({
+                icon: "success",
+                title: "Profile Updated",
+                text: "Your profile has been successfully updated.",
+            }).then(() => {
+                form.submit(); // Programmatically submit the form
+            });
+        });
+
+      
+    });
+</script>

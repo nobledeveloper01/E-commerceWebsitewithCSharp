@@ -23,7 +23,7 @@ namespace E_commerceWebsite.Controllers.Customer
             return View("~/Views/Customer/Index.cshtml");
         }
 
-        [HttpGet]
+        
         [HttpGet]
         public IActionResult ProductDetails(int id)
         {
@@ -58,14 +58,6 @@ namespace E_commerceWebsite.Controllers.Customer
 
        
 
-        //public IActionResult Details(int id)
-        //{
-        //    var product = _productService.GetProductById(id); 
-        //    if (product == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(product); 
-        //}
+       
     }
 }

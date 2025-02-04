@@ -19,13 +19,11 @@ html {
 
 */
 
-
-
 .product-detail-page {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    padding: 20px;
+    padding: 60px;
     gap: 20px;
 }
 
