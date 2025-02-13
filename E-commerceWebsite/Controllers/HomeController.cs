@@ -58,22 +58,24 @@ namespace E_commerceWebsite.Controllers
             });
         }
 
-
         [HttpGet]
         public IActionResult Cart()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(userId)) // Guest User - Retrieve from Cookies
             {
-                var cart = HttpContext.Session.GetString("Cart");
-                List<CartItem> cartItems = string.IsNullOrEmpty(cart) ? new List<CartItem>() : JsonSerializer.Deserialize<List<CartItem>>(cart);
+                var cartCookie = Request.Cookies["Cart"];
+                List<CartItem> cartItems = string.IsNullOrEmpty(cartCookie)
+                    ? new List<CartItem>()
+                    : JsonSerializer.Deserialize<List<CartItem>>(cartCookie);
+
                 return View("~/Views/Customer/Cart.cshtml", cartItems);
             }
 
+            // Logged-in User - Retrieve from Database
             var userCartItems = _context.CartItems.Where(ci => ci.UserId == userId).ToList();
             return View("~/Views/Customer/Cart.cshtml", userCartItems);
-
         }
 
 
@@ -87,12 +89,15 @@ namespace E_commerceWebsite.Controllers
 
             var unitPrice = product.DiscountedPrice > 0 ? product.DiscountedPrice : product.Price;
 
-            if (string.IsNullOrEmpty(userId))  // Guest User Handling
+            if (string.IsNullOrEmpty(userId))  // Guest User Handling - Store in Cookies
             {
                 _logger.LogInformation("Adding to cart as a guest.");
 
-                var cart = HttpContext.Session.GetString("Cart");
-                List<CartItem> cartItems = string.IsNullOrEmpty(cart) ? new List<CartItem>() : JsonSerializer.Deserialize<List<CartItem>>(cart);
+                // Retrieve existing cart from cookies
+                var cartCookie = Request.Cookies["Cart"];
+                List<CartItem> cartItems = string.IsNullOrEmpty(cartCookie)
+                    ? new List<CartItem>()
+                    : JsonSerializer.Deserialize<List<CartItem>>(cartCookie);
 
                 var existingItem = cartItems.FirstOrDefault(ci =>
                     ci.ProductId == productId &&
@@ -118,44 +123,17 @@ namespace E_commerceWebsite.Controllers
                     });
                 }
 
-                HttpContext.Session.SetString("Cart", JsonSerializer.Serialize(cartItems));
-            }
-            else  // Logged-in User Handling
-            {
-                _logger.LogInformation("Adding to cart for user: " + userId);
+                // Serialize cart to JSON
+                var cartJson = JsonSerializer.Serialize(cartItems);
 
-                var existingItem = _context.CartItems.FirstOrDefault(ci =>
-                    ci.UserId == userId &&
-                    ci.ProductId == productId &&
-                    ci.SelectedColor == selectedColor &&
-                    ci.SelectedSize == selectedSize);
-
-                if (existingItem != null)
+                // Store updated cart in cookies (set expiration as needed)
+                Response.Cookies.Append("Cart", cartJson, new CookieOptions
                 {
-                    existingItem.Quantity += quantity;
-                    existingItem.TotalPrice = existingItem.Quantity * (decimal)unitPrice;
-                }
-                else
-                {
-                    _context.CartItems.Add(new CartItem
-                    {
-                        UserId = userId,
-                        ProductId = productId,
-                        ProductName = product.Name,
-                        SelectedColor = selectedColor,
-                        SelectedSize = selectedSize,
-                        Quantity = quantity,
-                        UnitPrice = (decimal)unitPrice,
-                        TotalPrice = quantity * (decimal)unitPrice
-                    });
-                }
-
-                _context.SaveChanges();
-
-                // Clear session cart after login and add to database
-                HttpContext.Session.Remove("Cart");
+                    HttpOnly = true, // Prevent JavaScript access for security
+                    Secure = true,   // Use HTTPS
+                    Expires = DateTime.UtcNow.AddDays(7) // Set expiration
+                });
             }
-
             return RedirectToAction("Cart");
         }
 
