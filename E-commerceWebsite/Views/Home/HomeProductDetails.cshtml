@@ -28,7 +28,7 @@
                 <button class="color-option" style="background-color: @color;"></button>
             }
         </div>
-
+    
         <div class="size-selector">
             <h5>Choose Size:</h5>
             @foreach (var size in Model.Sizes)
@@ -42,7 +42,7 @@
             <input type="number" id="quantity" min="0" value="0" />
         </div>
 
-        <form method="post" asp-controller="Cart" asp-action="AddToCart" id="addToCartForm" class="mt-5">
+        <form method="post" asp-controller="Home" asp-action="AddToCart" id="addToCartForm" class="mt-5">
             <input type="hidden" name="productId" value="@Model.Id" />
             <input type="hidden" name="selectedColor" id="selectedColor" />
             <input type="hidden" name="selectedSize" id="selectedSize" />

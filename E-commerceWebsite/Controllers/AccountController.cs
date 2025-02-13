@@ -110,11 +110,11 @@ namespace E_commerceWebsite.Controllers
             {
                 // Create the list of claims to be used for authentication
                 var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),  
-            new Claim(ClaimTypes.Name, user.Username),               
-            new Claim(ClaimTypes.Role, user.Role)                    
-        };
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),  
+                    new Claim(ClaimTypes.Name, user.Username),               
+                    new Claim(ClaimTypes.Role, user.Role)                    
+                };
 
                 // Create a ClaimsIdentity based on the claims
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

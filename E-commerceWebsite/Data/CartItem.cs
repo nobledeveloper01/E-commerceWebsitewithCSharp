@@ -10,17 +10,17 @@ namespace E_commerceWebsite.Data
         public int Id { get; set; }
 
         [Required]
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         [Required]
         public int ProductId { get; set; } 
 
         [Required]
-        public string ProductName { get; set; }
+        public string? ProductName { get; set; }
 
-        public string SelectedColor { get; set; }
+        public string? SelectedColor { get; set; }
 
-        public string SelectedSize { get; set; }
+        public string? SelectedSize { get; set; }
 
         [Required]
         public int Quantity { get; set; }
