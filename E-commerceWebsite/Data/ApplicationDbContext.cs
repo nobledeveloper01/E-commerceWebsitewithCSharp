@@ -18,6 +18,9 @@ namespace E_commerceWebsite.Data
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet <ContactMessage> ContactMessages { get; set; }
 
+        public DbSet<ContactForm> ContactForms { get; set; }
+        public DbSet<ComplaintForm> ComplaintForms { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

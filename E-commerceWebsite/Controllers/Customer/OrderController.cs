@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System.Linq;
 using System;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_commerceWebsite.Controllers
 {
@@ -20,7 +21,7 @@ namespace E_commerceWebsite.Controllers
             _context = context;
             _logger = logger;
         }
-
+        [Authorize]
         [HttpGet]
         [Route("Customer/OrderDetails")]
         public IActionResult OrderDetails(string orderId)
@@ -45,7 +46,7 @@ namespace E_commerceWebsite.Controllers
         }
 
 
-
+        [Authorize]
         [HttpGet]
         public IActionResult OrderHistory()
         {
@@ -98,7 +99,7 @@ namespace E_commerceWebsite.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpGet]
         public IActionResult OrderConfirmation(string orderId)
         {

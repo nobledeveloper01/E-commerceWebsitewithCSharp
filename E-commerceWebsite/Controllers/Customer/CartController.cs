@@ -5,6 +5,7 @@ using E_commerceWebsite.Data;
 using E_commerceWebsite.Data.Entities;
 using E_commerceWebsite.ViewModels;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_commerceWebsite.Areas.Customer.Controllers
 {
@@ -17,7 +18,7 @@ namespace E_commerceWebsite.Areas.Customer.Controllers
         {
             _context = context;
         }
-
+        [Authorize]
         [HttpGet]
         public IActionResult Cart()
         {
@@ -82,7 +83,7 @@ namespace E_commerceWebsite.Areas.Customer.Controllers
             return View("~/Views/Customer/Cart.cshtml", userCartItems);
         }
 
-
+        [Authorize]
         [HttpPost]
         public IActionResult AddToCart(int productId, string selectedColor, string selectedSize, int quantity)
         {
@@ -170,9 +171,10 @@ namespace E_commerceWebsite.Areas.Customer.Controllers
                 Response.Cookies.Delete("Cart");
             }
 
-            return RedirectToAction("Cart");
+            return Json(new { success = true, message = "Product added to cart successfully!"});
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult RemoveFromCart(int cartItemId)
         {
@@ -185,6 +187,7 @@ namespace E_commerceWebsite.Areas.Customer.Controllers
             return RedirectToAction("Cart");
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult Checkout()
         {
@@ -199,7 +202,7 @@ namespace E_commerceWebsite.Areas.Customer.Controllers
         }
 
 
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> PlaceOrder([FromBody] OrderViewModel model)
         {
@@ -249,7 +252,7 @@ namespace E_commerceWebsite.Areas.Customer.Controllers
                     OrderId = orderId,
                     CustomerName = customer.Name,
                     OrderDate = DateTime.UtcNow,
-                    Status = "Pending",
+                    Status = "Pending Payment",
                     TotalAmount = totalAmount,
                     CustomerId = customer.Id,
                     PickupOrDelivery = model.PickupOrDelivery

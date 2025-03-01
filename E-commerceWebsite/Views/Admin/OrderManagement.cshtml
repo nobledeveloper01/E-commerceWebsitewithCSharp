@@ -17,22 +17,25 @@
                 <p class="fs-4 fw-bold text-dark">@Model.Count()</p>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-12 col-sm-6 col-md-3 mb-3">
             <div class="card text-center p-3 shadow-sm" style="background-color: #fff9e6; border-left: 5px solid #ffc107;">
                 <h5 class="text-warning">Pending Orders</h5>
-                <p class="fs-4 fw-bold text-dark">@Model.Count(o => o.Status == "Pending")</p>
+                <p class="fs-4 fw-bold text-dark">
+                    @Model.Count(o => o.Status == "Pending Payment" || o.Status == "Confirm Payment" || o.Status == "Order Dispatched")
+                </p>
             </div>
         </div>
+
         <div class="col-md-3">
             <div class="card text-center p-3 shadow-sm" style="background-color: #e6fff9; border-left: 5px solid #28a745;">
                 <h5 class="text-success">Completed Orders</h5>
-                <p class="fs-4 fw-bold text-dark">@Model.Count(o => o.Status == "Completed")</p>
+                <p class="fs-4 fw-bold text-dark">@Model.Count(o => o.Status == "Delivered")</p>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card text-center p-3 shadow-sm" style="background-color: #ffe6e6; border-left: 5px solid #dc3545;">
                 <h5 class="text-danger">Cancelled Orders</h5>
-                <p class="fs-4 fw-bold text-dark">@Model.Count(o => o.Status == "Cancelled")</p>
+                <p class="fs-4 fw-bold text-dark">@Model.Count(o => o.Status == "Canceled")</p>
             </div>
         </div>
     </div>

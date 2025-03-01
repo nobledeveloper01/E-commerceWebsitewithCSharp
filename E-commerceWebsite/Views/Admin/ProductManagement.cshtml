@@ -646,10 +646,17 @@
                             <td class="text-danger">${product.discountedPrice || '-'}</td>
                             <td>${product.category}</td>
                             <td><img src="${product.imageUrl}" class="img-thumbnail" width="50"></td>
-                            <td>
-                                <button class="btn btn-sm btn-warning" onclick="editProduct(${product.id})">Edit</button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteProduct(${product.id})">Delete</button>
-                            </td>
+                               <td>
+        <div class="d-flex justify-content-between gap-2 w-100">
+            <button class="btn btn-sm btn-warning" onclick="editProduct(${product.id})">
+                <i class="fa-solid fa-pencil"></i>
+            </button>
+            <button class="btn btn-sm btn-danger" onclick="deleteProduct(${product.id})">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        </div>
+    </td>
+
                         </tr>`;
                     });
                 }
@@ -714,14 +721,33 @@ function updatePaginationInfo() {
 
 
     function deleteProduct(id) {
-        fetch(`/Admin/Product/DeleteProduct/${id}`, { method: 'DELETE' })
-            .then(response => {
-                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                return response.json();
-            })
-            .then(() => fetchProducts(currentPage))
-            .catch(error => console.error("Error deleting product:", error));
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to undo this action!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#6c757d",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/Admin/Product/DeleteProduct/${id}`, { method: 'DELETE' })
+                    .then(response => {
+                        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                        return response.json();
+                    })
+                    .then(() => {
+                        Swal.fire("Deleted!", "The product has been deleted.", "success");
+                        fetchProducts(currentPage);
+                    })
+                    .catch(error => {
+                        console.error("Error deleting product:", error);
+                        Swal.fire("Error!", "There was a problem deleting the product.", "error");
+                    });
+            }
+        });
     }
+
 
     function openModal() {
         document.getElementById('productModal').style.display = 'flex';

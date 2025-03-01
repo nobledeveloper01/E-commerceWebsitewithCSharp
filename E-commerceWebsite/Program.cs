@@ -32,6 +32,8 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -41,12 +43,32 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts(); 
 }
 
+app.Use(async (context, next) =>
+{
+    context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+    context.Response.Headers["Pragma"] = "no-cache";
+    context.Response.Headers["Expires"] = "0";
+    await next();
+});
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
 app.UseSession();
+
+//// Clear claims and session on app restart
+//app.Use(async (context, next) =>
+//{
+//    if (context.Request.Cookies.ContainsKey("Ecommerce"))
+//    {
+//        context.Response.Cookies.Delete("Ecommerce");
+//    }
+//    context.Session.Clear();
+//    await next();
+//});
+
 
 app.UseAuthorization();
 

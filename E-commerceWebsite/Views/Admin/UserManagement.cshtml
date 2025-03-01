@@ -5,6 +5,163 @@
     ViewData["Title"] = "Admin Dashboard - User Management";
 }
 
+<style>
+
+    /* General Page Styling */
+    .container {
+        max-width: 1200px;
+    }
+
+    /* Heading */
+    h2 {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    /* User Summary Cards */
+    .card {
+        transition: transform 0.2s ease-in-out;
+        border-radius: 10px;
+    }
+
+        .card:hover {
+            transform: scale(1.03);
+        }
+
+        .card h5 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .card p {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+    /* Filter Section */
+    .bg-light {
+        background: #f8f9fa !important;
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    form label {
+        font-weight: 600;
+    }
+
+    .form-control {
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+    /* User Table */
+    .table {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+        .table thead {
+            background: #343a40;
+            color: white;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+        }
+
+    /* Status Badges */
+    .bg-success {
+        background-color: #28a745 !important;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    .bg-danger {
+        background-color: #dc3545 !important;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    /* Buttons */
+    .btn {
+        border-radius: 5px;
+        padding: 8px 12px;
+        font-weight: 600;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border: none;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+    /* Pagination */
+    .pagination .page-item .page-link {
+        color: #007bff;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #007bff;
+        color: white;
+        border: none;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        color: #ccc;
+    }
+
+    /* Admin Creation Form */
+    .bg-white {
+        border-radius: 10px;
+    }
+
+        .bg-white h5 {
+            font-weight: 700;
+        }
+
+    #fullName, #username, #password {
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .fa-user-plus {
+        margin-right: 5px;
+    }
+
+</style>
+
 <div class="container mt-5">
     <!-- Heading -->
     <h2 class="text-center mb-5 text-dark fw-bold">User Management Dashboard</h2>
@@ -42,20 +199,21 @@
         <div class="bg-light p-4 rounded shadow-sm">
             <h5 class="fw-bold mb-3">Filter Users</h5>
             <form class="row" method="get">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-5 mb-3">
                     <label class="fw-bold">Status</label>
                     <select class="form-control" name="status">
-                        <option value="">All</option>
-                        <option value="active" selected="@Model.Status == " active"">Active</option>
-                        <option value="inactive" selected="@Model.Status == " inactive"">Inactive</option>
+                        <option value="" selected="@(string.IsNullOrEmpty(Model.Status) ? "selected" : null)">All</option>
+                        <option value="active" selected="@(Model.Status == "active" ? "selected" : null)">Active</option>
+                        <option value="inactive" selected="@(Model.Status == "inactive" ? "selected" : null)">Inactive</option>
                     </select>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-5 ">
                     <label class="fw-bold">Search by Name/Email</label>
                     <input type="text" class="form-control" name="searchTerm" placeholder="Enter name or email" value="@Model.SearchTerm">
                 </div>
-                <div class="col-md-12">
-                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                <div class="col-md-2 d-flex flex-column justify-content-end">
+                    <button type="submit" class="btn btn-primary mb-2">Apply Filters</button>
+                    <a href="@Url.Action("UserManagement", "User")" class="btn btn-secondary">Clear Filters</a>
                 </div>
             </form>
         </div>
@@ -83,10 +241,13 @@
                         <td>@user.FullName</td>
                         <td>@user.Email</td>
                         <td>@user.Role</td>
-                        <td><span class="badge @(user.Status == "Active" ? "bg-success" : "bg-danger")">@user.Status</span></td>
+                        <td>
+                            <span class="badge @(user.Status == "Active" ? "bg-success" : "bg-danger")">
+                                @user.Status
+                            </span>
+                        </td>
                         <td>@user.DateRegistered.ToString("yyyy-MM-dd")</td>
                         <td>
-                           
                             <form action="@Url.Action("DeactivateUser", "User", new { id = user.Id })" method="post" style="display:inline;">
                                 <button type="submit" class="btn btn-sm btn-danger">Deactivate</button>
                             </form>
@@ -117,12 +278,89 @@
             </li>
         </ul>
     </nav>
-</div>
+
+    <div class="bg-white p-4 rounded shadow-sm mt-5">
+        <h5 class="fw-bold mb-3">Create Admin</h5>
+        <form id="createAdminForm">
+            <div class="mb-3">
+                <label class="fw-bold">Full Name</label>
+                <input type="text" id="fullName" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="fw-bold">Username</label>
+                <input type="text" id="username" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="fw-bold">Password</label>
+                <input type="password" id="password" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-user-plus"></i> Create Admin
+            </button>
+        </form>
+    </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("createAdminForm").addEventListener("submit", async function (event) {
+                event.preventDefault();
+
+                let fullName = document.getElementById("fullName").value;
+                let username = document.getElementById("username").value;
+                let password = document.getElementById("password").value;
+
+                let formData = {
+                    CreateAdmin: {
+                        FullName: fullName,
+                        Username: username,
+                        Password: password
+                    }
+                };
+
+                try {
+                    let response = await fetch("/User/CreateNewAdmin", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(formData)
+                    });
+
+                    let result = await response.json();
+
+                    if (response.ok) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: result.message || 'Admin account created successfully!',
+                            confirmButtonColor: '#28a745'
+                        }).then(() => {
+                            location.reload(); // Reload to update user list
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: result.message || 'Something went wrong. Please try again.',
+                            confirmButtonColor: '#dc3545'
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred while processing your request.',
+                        confirmButtonColor: '#dc3545'
+                    });
+                }
+            });
+        });
+    </script>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-       
-
         document.querySelectorAll('.deactivate-user-btn, .activate-user-btn').forEach(button => {
             button.addEventListener('click', () => {
                 alert('User status changed successfully!');

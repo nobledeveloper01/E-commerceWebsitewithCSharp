@@ -1,6 +1,12 @@
 ﻿@model List<E_commerceWebsite.Data.CartItem>
+@using System.Security.Claims
 @{
     Layout = "~/Views/Shared/CustomerLayout.cshtml";
+
+    // Retrieve logged-in user's name and email from claims
+    var user = User;
+    var userName = user.Identity.IsAuthenticated ? user.FindFirst(ClaimTypes.Name)?.Value : "";
+    var userEmail = user.Identity.IsAuthenticated ? user.FindFirst(ClaimTypes.Email)?.Value : "";
 }
 
 <h2>Checkout</h2>
@@ -38,23 +44,26 @@
 
 <button class="btn btn-success" id="placeOrderButton">Place Order</button>
 
+<!-- Checkout Modal -->
 <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="checkoutModalLabel">Customer Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times fa-lg"></i>
+                </button>
             </div>
             <div class="modal-body">
                 <form id="customerForm" novalidate>
                     <div class="mb-3">
                         <label for="name">Name</label>
-                        <input type="text" id="name" name="name" class="form-control" required />
+                        <input type="text" id="name" name="name" class="form-control" required value="@userName" />
                         <div class="invalid-feedback">Please enter your name.</div>
                     </div>
                     <div class="mb-3">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" class="form-control" required />
+                        <input type="email" id="email" name="email" class="form-control" required value="@userEmail" />
                         <div class="invalid-feedback">Please enter a valid email address.</div>
                     </div>
                     <div class="mb-3">
@@ -75,6 +84,23 @@
     const deliveryCharge = 4000;
     const baseTotal = @Model.Sum(item => item.TotalPrice);
 
+    document.addEventListener('DOMContentLoaded', function () {
+        const cancelButton = document.querySelector('#checkoutModal .btn[data-bs-dismiss="modal"]');
+        cancelButton.addEventListener('click', function () {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('checkoutModal'));
+            if (modal) {
+                modal.hide();
+            }
+        });
+
+        // Ensure fields can be edited and blank if user is not logged in
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+
+        if (!nameInput.value) nameInput.value = '';
+        if (!emailInput.value) emailInput.value = '';
+    });
+
     document.getElementById('pickupOrDelivery').addEventListener('change', function () {
         const totalDisplay = document.getElementById('totalDisplay');
         const total = this.value === 'delivery' ? baseTotal + deliveryCharge : baseTotal;
@@ -84,7 +110,11 @@
     document.getElementById('placeOrderButton').addEventListener('click', function () {
         const deliveryOption = document.getElementById('pickupOrDelivery');
         if (!deliveryOption.value) {
-            alert('Please select a delivery option.');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Missing Delivery Option',
+                text: 'Please select a delivery option.',
+            });
             return;
         }
         new bootstrap.Modal(document.getElementById('checkoutModal')).show();

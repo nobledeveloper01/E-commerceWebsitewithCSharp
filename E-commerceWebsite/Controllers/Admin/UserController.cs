@@ -3,19 +3,24 @@ using Microsoft.EntityFrameworkCore;
 using E_commerceWebsite.Data;
 using E_commerceWebsite.Models;
 using E_commerceWebsite.ViewModels;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_commerceWebsite.Controllers.Admin
 {
     public class UserController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IPasswordHasher<User> _passwordHasher;
 
-        public UserController(ApplicationDbContext context)
+        public UserController(ApplicationDbContext context, IPasswordHasher<User> passwordHasher)
         {
             _context = context;
+            _passwordHasher = passwordHasher;
         }
 
         // Method to manage users with pagination and search
+        [Authorize]
         public async Task<IActionResult> UserManagement(int page = 1, string status = "", string searchTerm = "")
         {
             const int pageSize = 10; // Number of users per page
@@ -69,6 +74,7 @@ namespace E_commerceWebsite.Controllers.Admin
             return View("~/Views/Admin/UserManagement.cshtml", model);
         }
 
+        [Authorize]
         private UserCounts MapToUserCounts(UserCountsViewModel viewModel)
         {
             return new UserCounts
@@ -78,7 +84,7 @@ namespace E_commerceWebsite.Controllers.Admin
                 Admins = viewModel.Admins
             };
         }
-
+        [Authorize]
         public async Task<IActionResult> DeactivateUser(int id)
         {
             // Fetch user from the database
@@ -95,7 +101,7 @@ namespace E_commerceWebsite.Controllers.Admin
             // Redirect back to the UserManagement page
             return RedirectToAction("UserManagement");
         }
-
+        [Authorize]
         public async Task<IActionResult> ActivateUser(int id)
         {
             var user = await _context.Users.FindAsync(id);
@@ -112,11 +118,66 @@ namespace E_commerceWebsite.Controllers.Admin
             return RedirectToAction("UserManagement");
         }
 
-
+        [Authorize]
         public async Task<IActionResult> UserComplains()
         {
             var contactMessages = await _context.ContactMessages.ToListAsync();
             return View("~/Views/Admin/UserComplains.cshtml", contactMessages);
         }
+        [Authorize]
+        public async Task<IActionResult> UserContactUs()
+        {
+            var contactMessages = await _context.ContactForms.ToListAsync();
+            return View("~/Views/Admin/UserContactUs.cshtml", contactMessages);
+        }
+        [Authorize]
+        public async Task<IActionResult> UserProductComplains()
+        {
+            var contactMessages = await _context.ComplaintForms.ToListAsync();
+            return View("~/Views/Admin/UserProductComplain.cshtml", contactMessages);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult CreateAdmin()
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> CreateNewAdmin([FromBody] UserManagementViewModel model)
+        {
+            if (model?.CreateAdmin == null)
+            {
+                return BadRequest(new { message = "Invalid data submitted." });
+            }
+
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.CreateAdmin.Username);
+            if (existingUser != null)
+            {
+                return BadRequest(new { message = "An account with this email already exists." });
+            }
+
+            var newAdmin = new User
+            {
+                FullName = model.CreateAdmin.FullName,
+                Username = model.CreateAdmin.Username,
+                Email = model.CreateAdmin.Username,
+                Role = "Admin",
+                Status = "Active",
+                DateRegistered = DateTime.UtcNow
+            };
+
+            newAdmin.PasswordHash = _passwordHasher.HashPassword(newAdmin, model.CreateAdmin.Password);
+
+            _context.Users.Add(newAdmin);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Admin account created successfully!" });
+        }
+
+
+
     }
 }

@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<E_commerceWebsite.Data.Entities.OrderAdmin>
 
-    <style>
+<style>
     .badge {
         padding: 0.5rem;
         border-radius: 0.25rem;
@@ -9,23 +9,31 @@
         text-transform: capitalize;
     }
 
-        .badge.bg-pending {
+        .badge.bg-pending-payment {
             background-color: #ffc107; /* Yellow */
             color: #000;
         }
 
-        .badge.bg-completed {
+        .badge.bg-payment-received {
+            background-color: #17a2b8; /* Blue */
+            color: #fff;
+        }
+
+        .badge.bg-order-dispatched {
+            background-color: #ff9800; /* Orange */
+            color: #fff;
+        }
+
+        .badge.bg-delivered {
             background-color: #28a745; /* Green */
             color: #fff;
         }
 
-        .badge.bg-cancelled {
+        .badge.bg-canceled {
             background-color: #dc3545; /* Red */
             color: #fff;
         }
-
-
-    </style>
+</style>
 
 @if (!Model.Any())
 {
@@ -41,25 +49,41 @@ else
             <td>@order.OrderId</td>
             <td>@order.CustomerName</td>
             <td>@order.OrderDate.ToShortDateString()</td>
-            <td><span class="badge bg-@(order.Status.ToLower())">@order.Status</span></td>
+            <td><span class="badge bg-@(order.Status?.ToLower().Replace(" ", "-") ?? "pending")">@order.Status</span></td>
             <td>₦@order.TotalAmount</td>
             <td>
-                @if (order.Status == "Pending")
+                @if (order.Status == "Pending Payment")
                 {
-                    <button class="btn btn-sm btn-success status-btn"
-                            data-order-id="@order.OrderId"
-                            data-status="Completed">
-                        Mark Completed
+                    <button class="btn btn-sm btn-primary status-btn" data-order-id="@order.OrderId" data-status="Payment Received">
+                        Confirm Payment
                     </button>
-                    <button class="btn btn-sm btn-danger status-btn"
-                            data-order-id="@order.OrderId"
-                            data-status="Cancelled">
-                        Cancel
+                }
+                else if (order.Status == "Payment Received")
+                {
+                    <button class="btn btn-sm btn-warning status-btn" data-order-id="@order.OrderId" data-status="Order Dispatched">
+                        Dispatch Order
                     </button>
+                }
+                else if (order.Status == "Order Dispatched")
+                {
+                    <button class="btn btn-sm btn-success status-btn" data-order-id="@order.OrderId" data-status="Delivered">
+                        Mark as Delivered
+                    </button>
+                }
+                else if (order.Status == "Canceled")
+                {
+                    <span class="text-muted">Order Canceled</span>
                 }
                 else
                 {
                     <span class="text-muted">No actions available</span>
+                }
+
+                @if (order.Status != "Canceled" && order.Status != "Delivered")
+                {
+                    <button class="btn btn-sm btn-danger cancel-btn mt-1" data-order-id="@order.OrderId">
+                        Cancel Order
+                    </button>
                 }
             </td>
         </tr>
@@ -68,24 +92,14 @@ else
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Handle status update
         document.querySelectorAll('.status-btn').forEach(button => {
             button.addEventListener('click', event => {
                 const orderId = event.target.getAttribute('data-order-id');
                 const status = event.target.getAttribute('data-status');
-                const row = event.target.closest('tr');
-                const currentStatus = row.querySelector('.badge').textContent;
-
-                if (currentStatus !== 'Pending') {
-                    Swal.fire({
-                        title: 'Action not allowed',
-                        text: 'This order can no longer be modified',
-                        icon: 'error'
-                    });
-                    return;
-                }
 
                 Swal.fire({
-                    title: `Are you sure you want to mark this order as ${status}?`,
+                    title: `Are you sure you want to update the order to '${status}'?`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Yes, update it!',
@@ -93,39 +107,62 @@ else
                     if (result.isConfirmed) {
                         fetch('/Order/UpdateOrderStatus', {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
+                            headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ orderId, status }),
                         })
-                            .then(response => {
-                                if (!response.ok) {
-                                    return response.json().then(error => {
-                                        throw new Error(error.message || 'Failed to update status');
-                                    });
-                                }
-                                return response.json();
-                            })
+                            .then(response => response.json())
                             .then(data => {
                                 Swal.fire({
                                     title: 'Success',
                                     text: data.message,
                                     icon: 'success',
                                 });
-
-                                // Update UI
-                                const badge = row.querySelector('.badge');
-                                badge.className = `badge bg-${data.newStatus.toLowerCase()}`;
-                                badge.textContent = data.newStatus;
-
-                                // Remove action buttons
-                                const actionCell = row.querySelector('td:last-child');
-                                actionCell.innerHTML = '<span class="text-muted">No actions available</span>';
+                                window.location.reload(); // Reload the page
                             })
                             .catch(error => {
                                 Swal.fire({
                                     title: 'Error',
-                                    text: error.message,
+                                    text: error.message || 'Failed to update status',
+                                    icon: 'error',
+                                });
+                            });
+                    }
+                });
+            });
+        });
+
+        // Handle order cancellation
+        document.querySelectorAll('.cancel-btn').forEach(button => {
+            button.addEventListener('click', event => {
+                const orderId = event.target.getAttribute('data-order-id');
+
+                Swal.fire({
+                    title: "Are you sure you want to cancel this order?",
+                    text: "This action cannot be undone!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, cancel it!",
+                    cancelButtonText: "No, keep it"
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        fetch('/Order/UpdateOrderStatus', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ orderId, status: "Canceled" }),
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                Swal.fire({
+                                    title: 'Canceled',
+                                    text: data.message,
+                                    icon: 'success',
+                                });
+                                window.location.reload(); // Reload the page
+                            })
+                            .catch(error => {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: error.message || 'Failed to cancel order',
                                     icon: 'error',
                                 });
                             });

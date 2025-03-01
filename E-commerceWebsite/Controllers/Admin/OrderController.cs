@@ -2,6 +2,7 @@
 using E_commerceWebsite.Data;
 using E_commerceWebsite.Data.Entities;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_commerceWebsite.Controllers.Admin
 {
@@ -15,14 +16,16 @@ namespace E_commerceWebsite.Controllers.Admin
         }
 
         // GET: Order/OrderManagement
+        [Authorize]
         public IActionResult OrderManagement()
         {
             var orders = _context.Orders.ToList();
             return View("~/Views/Admin/OrderManagement.cshtml", orders);
         }
 
-        
+
         // POST: Order/UpdateOrderStatus
+        [Authorize]
         [HttpPost]
         public IActionResult UpdateOrderStatus([FromBody] UpdateOrderStatusModel request)
         {
@@ -31,7 +34,7 @@ namespace E_commerceWebsite.Controllers.Admin
                 return BadRequest(new { message = "Order ID and status are required." });
             }
 
-            var validStatuses = new[] { "Pending", "Completed", "Cancelled" };
+            var validStatuses = new[] { "Pending Payment", "Payment Received", "Order Dispatched", "Delivered", "Canceled" };
             if (!validStatuses.Contains(request.Status))
             {
                 return BadRequest(new { message = "Invalid status value." });
@@ -46,7 +49,7 @@ namespace E_commerceWebsite.Controllers.Admin
             order.Status = request.Status;
             _context.SaveChanges();
 
-            return Ok(new { message = $"Order status updated to '{request.Status}' successfully." });
+            return Ok(new { message = $"Order status updated to '{request.Status}' successfully.", newStatus = request.Status });
         }
 
         public class UpdateOrderStatusModel
@@ -56,6 +59,7 @@ namespace E_commerceWebsite.Controllers.Admin
         }
 
         // POST: Order/FilterOrders
+        [Authorize]
         [HttpPost]
         public IActionResult FilterOrders([FromBody] FilterRequestModel filter)
         {

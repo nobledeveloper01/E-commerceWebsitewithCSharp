@@ -11,6 +11,19 @@
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script>
+        window.onload = function () {
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.href);
+            }
+            setTimeout(function () {
+                history.pushState(null, null, location.href);
+                window.onpopstate = function () {
+                    history.go(1);
+                };
+            }, 0);
+        };
+    </script>
 
     <style>
         /* Sidebar */
@@ -109,18 +122,11 @@
         <!-- Main Content -->
         <div class="flex-grow-1 main-content">
             <!-- Header -->
-            <header class="d-flex align-items-center justify-content-between p-3 bg-white shadow-sm">
+            <header class="d-flex align-items-center justify-content-end p-3 bg-white shadow-sm">
                 <button id="menu-toggle" class="btn btn-primary d-md-none" type="button" aria-label="Toggle navigation">
                     <i class="fas fa-bars"></i>
                 </button>
-                <div class="input-group w-50">
-                    <input type="text" class="form-control" placeholder="Search products...">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </div>
+                
                 <div class="d-flex align-items-center">
                     <a href="@Url.Action("Cart", "Cart", new { area = "Customer" })" class="mr-3 text-dark">
                         <i class="fas fa-shopping-cart fa-lg"></i>
@@ -160,5 +166,7 @@
             });
         });
     </script>
+
+   
 </body>
 </html>

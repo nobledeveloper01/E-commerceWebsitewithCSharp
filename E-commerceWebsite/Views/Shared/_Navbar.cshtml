@@ -1,62 +1,34 @@
-﻿<nav class="navbar navbar-expand-lg shadow-sm" style="background: linear-gradient(45deg, #fff, #fff); z-index: 1050;">
-    <div class="container">
-        <!-- Brand -->
-        <a class="navbar-brand fw-bold text-black" asp-area="" asp-controller="Home" asp-action="Index">
+﻿<nav class="navbar navbar-expand-lg shadow-sm bg-light bg-gradient">
+    <div class="container py-2">
+        <a class="navbar-brand fw-bold text-dark" asp-controller="Home" asp-action="Index">
             E-commerce<span class="text-primary">Website</span>
         </a>
 
-        <!-- Toggler button for small screens -->
-        <button class="navbar-toggler d-lg-none" type="button" id="toggleNavbar">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
             <i class="fas fa-bars"></i>
         </button>
 
-        <!-- Standard Navbar for Larger Screens -->
-        <div class="collapse navbar-collapse d-none d-lg-flex">
-            <ul class="navbar-nav ms-auto">
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav ms-auto align-items-center">
                 <li class="nav-item">
-                    <a class="nav-link text-black fw-bold" asp-controller="Home" asp-action="Index">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-black fw-bold" asp-controller="Home" asp-action="Contact">Contact</a>
+                    <a class="nav-link text-dark fw-semibold" asp-controller="Home" asp-action="Index">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-black fw-bold" asp-controller="Home" asp-action="About">About</a>
+                    <a class="nav-link text-dark fw-semibold" asp-controller="Home" asp-action="Contact">Contact/Complain</a>
                 </li>
                 <li class="nav-item">
-                    <a class="btn btn-dark text-white ms-2"
-                        style="border-radius: 20px; padding: 0.5rem 1.5rem; transition: background 0.3s, color 0.3s;"
-                        asp-controller="Account" asp-action="Login">Login</a>
+                    <a class="nav-link text-dark fw-semibold" asp-controller="Home" asp-action="About">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="btn btn-primary text-white ms-2"
-                        style="border-radius: 20px; padding: 0.5rem 1.5rem; transition: background 0.3s, color 0.3s;"
-                        asp-controller="Account" asp-action="Register">Sign Up</a>
+                    <a class="nav-link text-dark me-2" asp-controller="Home" asp-action="HomeCart">
+                        <i class="fas fa-shopping-cart fa-lg"></i>
+                    </a>
                 </li>
-            </ul>
-        </div>
-
-        <!-- Overlay Menu for Small Screens -->
-        <div class="overlay-navbar d-lg-none" id="navbarNav">
-            <button class="close-overlay text-white">&times;</button>
-            <ul class="navbar-nav text-center mt-4">
-                <li class="nav-item">
-                    <a class="nav-link text-white" style="transition: color 0.3s;" asp-controller="Home" asp-action="Index">Home</a>
+                <li class="nav-item ms-2">
+                    <a class="btn btn-dark text-white rounded-pill px-4 py-2 shadow-sm" asp-controller="Account" asp-action="Login">Login</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" style="transition: color 0.3s;" asp-controller="Home" asp-action="Contact">Contact</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" style="transition: color 0.3s;" asp-controller="Home" asp-action="About">About</a>
-                </li>
-                <li class="nav-item mt-3">
-                    <a class="btn btn-dark text-white"
-                        style="border-radius: 20px; padding: 0.5rem 1.5rem; transition: background 0.3s, color 0.3s;"
-                        asp-controller="Account" asp-action="Login">Login</a>
-                </li>
-                <li class="nav-item mt-2">
-                    <a class="btn btn-primary text-white"
-                        style="border-radius: 20px; padding: 0.5rem 1.5rem; transition: background 0.3s, color 0.3s;"
-                        asp-controller="Account" asp-action="Register">Sign Up</a>
+                <li class="nav-item ms-2">
+                    <a class="btn btn-primary text-white rounded-pill px-4 py-2 shadow-sm" asp-controller="Account" asp-action="Register">Sign Up</a>
                 </li>
             </ul>
         </div>
@@ -64,56 +36,39 @@
 </nav>
 
 <style>
-    /* Overlay Navbar Styles */
-    .overlay-navbar {
-        position: fixed;
-        top: 0;
-        left: -100%; /* Hidden initially */
-        width: 100%;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.9);
-        color: white;
-        z-index: 1050; /* Above most content but below modals */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        transition: all 0.4s ease;
+    .navbar-nav .nav-link {
+        margin-right: 1rem;
+        transition: color 0.3s ease;
     }
 
-    .overlay-navbar.open {
-        left: 0; /* Slide in */
+    .navbar-nav .nav-link:hover {
+        color: #0d6efd;
     }
 
-    .overlay-navbar .close-overlay {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        font-size: 2rem;
-        border: none;
-        background: none;
-        cursor: pointer;
+    .btn {
+        padding: 0.5rem 1.25rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        background-color: #0d6efd;
+        color: #fff;
     }
 
     .navbar-toggler i {
         font-size: 1.5rem;
-        cursor: pointer;
+        transition: color 0.3s ease;
     }
 
-    /* Hide Overlay for Larger Screens */
-    @@media (min-width: 992px) {
-        .overlay-navbar {
-            display: none;
+    .navbar-toggler:hover i {
+        color: #0d6efd;
+    }
+
+    @@media (max-width: 991.98px) {
+        .navbar-nav .nav-item {
+            margin-bottom: 10px;
         }
     }
 </style>
-
-<script>
-    document.getElementById("toggleNavbar").addEventListener("click", function () {
-        document.getElementById("navbarNav").classList.add("open");
-    });
-
-    document.querySelector(".close-overlay").addEventListener("click", function () {
-        document.getElementById("navbarNav").classList.remove("open");
-    });
-</script>

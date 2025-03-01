@@ -10,9 +10,12 @@ using System.Collections.Generic;
 using System;
 using Azure;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_commerceWebsite.Areas.Admin.Controllers
+
 {
+    [Authorize]
     [Area("Admin")]
     [Route("Admin/[controller]/[action]")]
     public class ProductController : Controller
@@ -25,11 +28,14 @@ namespace E_commerceWebsite.Areas.Admin.Controllers
             _context = context;
         }
 
+        [Authorize]
         public IActionResult ProductManagement()
         {
             return View("~/Views/Admin/ProductManagement.cshtml");
         }
 
+     
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> UploadProducts([FromForm] List<IFormFile> images, [FromForm] List<string> products)
         {
@@ -92,7 +98,8 @@ namespace E_commerceWebsite.Areas.Admin.Controllers
             return Ok("Products uploaded successfully.");
         }
 
-        
+
+        [Authorize]
         public async Task<IActionResult> GetProductMetrics()
         {
             var metrics = new
@@ -154,6 +161,7 @@ namespace E_commerceWebsite.Areas.Admin.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
@@ -167,6 +175,7 @@ namespace E_commerceWebsite.Areas.Admin.Controllers
             return Ok(new { message = "Product deleted successfully" });
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductById(int id)
         {
@@ -174,6 +183,7 @@ namespace E_commerceWebsite.Areas.Admin.Controllers
             return product != null ? Ok(product) : NotFound(new { message = "Product not found" });
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> EditProduct(int id, [FromForm] ProductUpdateModel model)
         {

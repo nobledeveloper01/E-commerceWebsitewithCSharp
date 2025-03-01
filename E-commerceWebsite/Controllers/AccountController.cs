@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace E_commerceWebsite.Controllers
 {
@@ -113,7 +115,8 @@ namespace E_commerceWebsite.Controllers
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),  
                     new Claim(ClaimTypes.Name, user.Username),               
-                    new Claim(ClaimTypes.Role, user.Role)                    
+                    new Claim(ClaimTypes.Role, user.Role),
+                    new Claim(ClaimTypes.Email, user.Email)
                 };
 
                 // Create a ClaimsIdentity based on the claims
@@ -138,9 +141,11 @@ namespace E_commerceWebsite.Controllers
             return View();
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult ResetPassword() => View();
 
+        [Authorize]
         [HttpPost]
         public IActionResult ResetPassword(string newPassword, string confirmPassword)
         {
@@ -152,7 +157,7 @@ namespace E_commerceWebsite.Controllers
             ModelState.AddModelError("", "Passwords do not match.");
             return View();
         }
-
+        [Authorize]
         public IActionResult Profile()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -172,11 +177,21 @@ namespace E_commerceWebsite.Controllers
             return View(user);
         }
 
-
+        [Authorize]
         public async Task<IActionResult> LogOut()
         {
             try
             {
+                // Clear authentication cookies and session
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                HttpContext.Session.Clear();
+                HttpContext.User = new System.Security.Claims.ClaimsPrincipal();
+                HttpContext.Session.Clear(); // Clear the session
+                                             // Prevent back button after logout
+                Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+                Response.Headers["Pragma"] = "no-cache";
+                Response.Headers["Expires"] = "0";
+
                 await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
                 // Pass a logout message via TempData
@@ -190,7 +205,7 @@ namespace E_commerceWebsite.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpGet]
         public IActionResult EditProfile()
         {

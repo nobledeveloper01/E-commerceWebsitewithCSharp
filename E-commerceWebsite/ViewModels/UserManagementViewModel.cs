@@ -10,6 +10,7 @@ namespace E_commerceWebsite.ViewModels
         public string SearchTerm { get; set; }
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
+        public CreateAdminViewModel CreateAdmin { get; set; } = new CreateAdminViewModel();
     }
 
     public class UserCounts

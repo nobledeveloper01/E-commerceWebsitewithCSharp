@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using E_commerceWebsite.ViewModels;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_commerceWebsite.Controllers.Customer
 {
@@ -19,6 +20,7 @@ namespace E_commerceWebsite.Controllers.Customer
         }
 
         // GET: Display the contact form
+        [Authorize]
         [HttpGet]
        public IActionResult Contact()
         {
@@ -26,6 +28,7 @@ namespace E_commerceWebsite.Controllers.Customer
         }
 
         // POST: Handle form submission
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Contact(ContactFormViewModel model)
@@ -62,6 +65,7 @@ namespace E_commerceWebsite.Controllers.Customer
         }
 
         // Optional: Confirmation page
+        [Authorize]
         public IActionResult Confirmation()
         {
             return View();

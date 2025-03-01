@@ -12,7 +12,11 @@
                 <div class="col-md-6 text-center text-md-start">
                     <h1 class="display-4 fw-bold text-dark">FIND CLOTHES THAT MATCH YOUR STYLE</h1>
                     <p class="lead text-secondary">Browse through our diverse range of meticulously crafted garments, designed to bring out your individuality and cater to your sense of style.</p>
+                    <div class="d-flex gap-3">
                     <a href="@Url.Action("Login", "Account")" class="btn btn-primary btn-lg mt-3 shadow-lg">Shop Now</a>
+                    <a href="@Url.Action("ProductCatalog", "Home")" class="btn btn-outline-primary btn-lg mt-3 shadow-lg">View Products</a>
+                    </div>
+                    
                     <div class="row text-center mt-5">
                         <div class="col-md-4">
                             <h3 class="fw-bold text-primary">200+</h3>
@@ -108,45 +112,43 @@
     <div class="container py-5">
         <h2 class="text-center fw-bold text-primary">Featured Products</h2>
         <div class="row mt-4">
-            <!-- Repeatable Product Cards with updated details -->
-            <div class="container my-4">
-                <div class="row">
-                    <div class="col-md-12">
-                        @if (Model?.Products == null || !Model.Products.Any())
-{
-    <div class="alert alert-warning text-center" role="alert">
-        No products available at the moment.
-    </div>
-}
-else
-{
-    <div class="row">
-        @foreach (var product in Model.Products)
-        {
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-                <div class="card h-100 rounded-3 shadow-lg">
-                    <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" />
-                    <div class="card-body">
-                        <h5 class="card-title">@product.Name</h5>
-                        <p class="card-text">@product.Description</p>
-                        <p class="price">
-                            ₦ @product.DiscountedPrice.ToString()
-                            @if (product.DiscountedPrice < product.Price)
-                            {
-                                <span class="original-price">₦ @product.Price.ToString()</span>
-                            }
-                        </p>
-                        <a href="@Url.Action("ProductDetails", "Home", new { id = product.Id, area = "Home" })"
-                           class="btn btn-primary w-100">View Details</a>
-                    </div>
+            @if (Model?.Products == null || !Model.Products.Any())
+            {
+                <div class="alert alert-warning text-center" role="alert">
+                    No products available at the moment.
                 </div>
-            </div>
-        }
-    </div>
-}
-                    </div>
+            }
+            else
+            {
+                <div class="row" id="product-container">
+                    @foreach (var product in Model.Products.Take(8))
+                    {
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                            <div class="card h-100 rounded-3 shadow-lg">
+                                <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" />
+                                <div class="card-body">
+                                    <h5 class="card-title">@product.Name</h5>
+                                    <p class="card-text">@product.Description</p>
+                                    <p class="price">
+                                        ₦ @product.DiscountedPrice.ToString()
+                                        @if (product.DiscountedPrice < product.Price)
+                                        {
+                                            <span class="original-price">₦ @product.Price.ToString()</span>
+                                        }
+                                    </p>
+                                    <a href="@Url.Action("ProductDetails", "Home", new { id = product.Id, area = "Home" })" class="btn btn-primary w-100">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
-            </div>
+               
+               
+                    <div class="text-center mt-4">
+                    <a href="@Url.Action("ProductCatalog", "Home",  new { area = "Home" })" class="btn btn-outline-primary btn-lg">See More</a>
+                    </div>
+                
+            }
         </div>
     </div>
 

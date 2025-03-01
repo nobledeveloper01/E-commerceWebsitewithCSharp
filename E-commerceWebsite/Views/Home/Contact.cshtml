@@ -2,30 +2,6 @@
     ViewData["Title"] = "Contact Us";
 }
 
-<!-- Hero Section -->
-<div class="text-center py-5" style="background: linear-gradient(45deg, #007bff, #0056b3); color: white;">
-    <h1 class="display-4 fw-bold">Contact Us</h1>
-    <p class="lead">We'd love to hear from you! Let us know how we can assist you.</p>
-</div>
-
-<!-- Mission and Vision Section -->
-<section class="container my-5">
-    <div class="row">
-        <div class="col-md-6 text-center mb-4">
-            <div class="p-4 shadow rounded" style="background: #f8f9fa;">
-                <h3 class="fw-bold text-primary">Our Mission</h3>
-                <p class="text-muted">To provide exceptional service and ensure customer satisfaction by addressing your needs and offering innovative solutions.</p>
-            </div>
-        </div>
-        <div class="col-md-6 text-center mb-4">
-            <div class="p-4 shadow rounded" style="background: #f8f9fa;">
-                <h3 class="fw-bold text-primary">Our Vision</h3>
-                <p class="text-muted">To become a leading provider in our industry by fostering long-term relationships and delivering value through every interaction.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
 <!-- Contact Form Section -->
 <section class="container my-5">
     <div class="row justify-content-center">
@@ -33,18 +9,25 @@
             <div class="p-5 shadow rounded" style="background: #fff;">
                 <h2 class="text-center fw-bold text-primary mb-4">Get In Touch</h2>
                 <p class="text-muted text-center">If you have any questions or need assistance, please reach out to us. We are here to help!</p>
-                <form>
+
+                <div id="contactMessage" class="alert" style="display: none;"></div>
+
+                <form id="contactForm">
+                    @Html.AntiForgeryToken() <!-- Include Anti-forgery token -->
                     <div class="mb-3">
                         <label class="form-label fw-bold">Your Name</label>
-                        <input type="text" class="form-control" placeholder="Enter your name" required>
+                        <input id="contactName" class="form-control" placeholder="Enter your name" required />
+                        <span id="contactNameError" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold">Email</label>
-                        <input type="email" class="form-control" placeholder="Enter your email" required>
+                        <input id="contactEmail" class="form-control" placeholder="Enter your email" required />
+                        <span id="contactEmailError" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold">Message</label>
-                        <textarea class="form-control" rows="5" placeholder="Your message" required></textarea>
+                        <textarea id="contactMessageInput" class="form-control" rows="5" placeholder="Your message" required></textarea>
+                        <span id="contactMessageError" class="text-danger"></span>
                     </div>
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary px-4 py-2">Send Message</button>
@@ -55,9 +38,110 @@
     </div>
 </section>
 
-<!-- Call-To-Action Section -->
-<section class="text-center py-5" style="background: linear-gradient(45deg, #007bff, #0056b3); color: white;">
-    <h3 class="fw-bold">Need Immediate Assistance?</h3>
-    <p class="lead">Feel free to call us at <strong>+1 234 567 890</strong> or email us at <strong>support@example.com</strong>.</p>
-    <a href="mailto:support@example.com" class="btn btn-light px-4 py-2 fw-bold">Email Us</a>
+<!-- Complaint Form Section -->
+<section class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="p-5 shadow rounded" style="background: #fff;">
+                <h2 class="text-center fw-bold text-primary mb-4">File a Complaint</h2>
+                <p class="text-muted text-center">If you have any complaints, please let us know and we will address them promptly.</p>
+
+                <div id="complaintMessage" class="alert" style="display: none;"></div>
+
+                <form id="complaintForm">
+                    @Html.AntiForgeryToken() <!-- Include Anti-forgery token -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Your Name</label>
+                        <input id="complaintName" class="form-control" placeholder="Enter your name" required />
+                        <span id="complaintNameError" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Email</label>
+                        <input id="complaintEmail" class="form-control" placeholder="Enter your email" required />
+                        <span id="complaintEmailError" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Complaint Details</label>
+                        <textarea id="complaintDescription" class="form-control" rows="5" placeholder="Describe your complaint" required></textarea>
+                        <span id="complaintDescriptionError" class="text-danger"></span>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-danger px-4 py-2">Submit Complaint</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function handleFormSubmit(formId, apiEndpoint, successMessage, errorMessage) {
+            document.getElementById(formId).addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const name = document.getElementById(formId === 'contactForm' ? 'contactName' : 'complaintName').value;
+                const email = document.getElementById(formId === 'contactForm' ? 'contactEmail' : 'complaintEmail').value;
+                const message = document.getElementById(formId === 'contactForm' ? 'contactMessageInput' : 'complaintDescription').value;
+
+                if (!name || !email || !message) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops!',
+                        text: 'All fields are required!',
+                    });
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('Name', name);
+                formData.append('Email', email);
+            
+                if (formId === 'contactForm') {
+                    formData.append('Message', message);
+                } else {
+                    formData.append('complaintDescription', message);
+                }
+
+                fetch(apiEndpoint, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'RequestVerificationToken': document.querySelector('[name="__RequestVerificationToken"]').value
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: successMessage,
+                                timer: 3000
+                            });
+                            document.getElementById(formId).reset();
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: errorMessage
+                            });
+                        }
+                    })
+                    .catch(() => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'There was an error with the request.'
+                        });
+                    });
+            });
+        }
+
+        handleFormSubmit('contactForm', '/Home/SubmitContact', 'Your message has been sent successfully!', 'There was an issue sending your message.');
+        handleFormSubmit('complaintForm', '/Home/SubmitComplaint', 'Your complaint has been submitted successfully!', 'There was an issue submitting your complaint.');
+    });
+
+</script>

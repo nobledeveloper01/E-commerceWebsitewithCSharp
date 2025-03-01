@@ -9,6 +9,9 @@ using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
+//using Newtonsoft.Json;
+using Azure.Core;
+using Azure;
 
 namespace E_commerceWebsite.Controllers
 {
@@ -46,7 +49,16 @@ namespace E_commerceWebsite.Controllers
 
         // Other actions remain unchanged
         public IActionResult PrivacyPolicy() => View();
-        public IActionResult Contact() => View();
+        public IActionResult Contact()
+        {
+            var model = new ContactAndComplaintViewModel
+            {
+                ContactForm = new ContactForm(),
+                ComplaintForm = new ComplaintForm()
+            };
+            return View(model);
+        }
+
         public IActionResult About() => View();
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -59,7 +71,7 @@ namespace E_commerceWebsite.Controllers
         }
 
         [HttpGet]
-        public IActionResult Cart()
+        public IActionResult HomeCart()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -70,7 +82,7 @@ namespace E_commerceWebsite.Controllers
                     ? new List<CartItem>()
                     : JsonSerializer.Deserialize<List<CartItem>>(cartCookie);
 
-                return View("~/Views/Customer/Cart.cshtml", cartItems);
+                return View("~/Views/Home/HomeCart.cshtml", cartItems);
             }
 
             // Logged-in User - Retrieve from Database
@@ -85,15 +97,15 @@ namespace E_commerceWebsite.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var product = _context.AdminProducts.FirstOrDefault(p => p.Id == productId);
 
-            if (product == null) return NotFound("Product not found");
+            if (product == null)
+            {
+                return Json(new { success = false, message = "Product not found" });
+            }
 
             var unitPrice = product.DiscountedPrice > 0 ? product.DiscountedPrice : product.Price;
 
             if (string.IsNullOrEmpty(userId))  // Guest User Handling - Store in Cookies
             {
-                _logger.LogInformation("Adding to cart as a guest.");
-
-                // Retrieve existing cart from cookies
                 var cartCookie = Request.Cookies["Cart"];
                 List<CartItem> cartItems = string.IsNullOrEmpty(cartCookie)
                     ? new List<CartItem>()
@@ -123,39 +135,89 @@ namespace E_commerceWebsite.Controllers
                     });
                 }
 
-                // Serialize cart to JSON
                 var cartJson = JsonSerializer.Serialize(cartItems);
-
-                // Store updated cart in cookies (set expiration as needed)
                 Response.Cookies.Append("Cart", cartJson, new CookieOptions
                 {
-                    HttpOnly = true, // Prevent JavaScript access for security
-                    Secure = true,   // Use HTTPS
-                    Expires = DateTime.UtcNow.AddDays(7) // Set expiration
+                    HttpOnly = true,
+                    Secure = true,
+                    Expires = DateTime.UtcNow.AddDays(7)
                 });
             }
-            return RedirectToAction("Cart");
+
+            return Json(new { success = true, message = "Product added to cart successfully!", redirectUrl = Url.Action("ProductCatalog", "Home")});
         }
 
-        [HttpPost]
-        public IActionResult RemoveFromCart(int cartItemId)
-        {
-            var cartItem = _context.CartItems.FirstOrDefault(ci => ci.Id == cartItemId);
-            if (cartItem == null)
-                return NotFound("Cart item not found");
 
-            _context.CartItems.Remove(cartItem);
-            _context.SaveChanges();
-            return RedirectToAction("Cart");
-        }
 
         [HttpGet]
+        public IActionResult ProductCatalog(string category, string searchQuery, int pageNumber = 1)
+        {
+            int pageSize = 12;
+
+            var productsQuery = _context.AdminProducts.AsQueryable();
+
+            if (!string.IsNullOrEmpty(category))
+            {
+                productsQuery = productsQuery.Where(p => p.Category == category);
+            }
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                productsQuery = productsQuery.Where(p => EF.Functions.Like(p.Name, $"%{searchQuery}%") || EF.Functions.Like(p.Description, $"%{searchQuery}%"));
+            }
+
+            var totalProducts = productsQuery.Count();
+
+            var paginatedProducts = productsQuery.Skip((pageNumber - 1) * pageSize).Take(pageSize)
+                .Select(p => new ProductViewModel
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Price = p.Price,
+                    DiscountedPrice= p.DiscountedPrice ?? 0m,
+                    ImageUrl = p.ImageUrl,
+                    Category = p.Category
+                }).ToList();
+
+            var viewModel = new ProductCatalogViewModel
+            {
+                Products = paginatedProducts,
+                ActiveCategory = category,
+                PageNumber = pageNumber,
+                TotalPages = (int)Math.Ceiling(totalProducts / (double)pageSize)
+            };
+
+            ViewBag.SearchQuery = searchQuery;
+
+            return View("~/Views/Home/HomeProductCatalog.cshtml", viewModel);
+        }
+
+[HttpPost]
+    public IActionResult RemoveFromCart(int cartItemId)
+    {
+        var cart = Request.Cookies["Cart"];
+        if (string.IsNullOrEmpty(cart))
+            return NotFound("Cart is empty");
+
+        var cartItems = JsonSerializer.Deserialize<List<CartItem>>(cart);
+        var cartItem = cartItems.FirstOrDefault(ci => ci.Id == cartItemId);
+        if (cartItem == null)
+            return NotFound("Cart item not found");
+
+        cartItems.Remove(cartItem);
+        Response.Cookies.Append("Cart", JsonSerializer.Serialize(cartItems), new CookieOptions { Expires = DateTime.Now.AddDays(7) });
+
+        return RedirectToAction("HomeCart");
+    }
+
+    [HttpGet]
         public IActionResult Checkout()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
             {
-                TempData["RedirectToCheckout"] = true;  // Flag to redirect after login
+                TempData["RedirectToCheckout"] = true; 
                 return RedirectToAction("Login", "Account");
             }
 
@@ -201,5 +263,50 @@ namespace E_commerceWebsite.Controllers
             var userCartItems = _context.CartItems.Where(ci => ci.UserId == userId).ToList();
             return View("~/Views/Customer/Checkout.cshtml", userCartItems);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SubmitContact(ContactForm form)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // Save to database
+                    _context.ContactForms.Add(form);
+                    _context.SaveChanges();
+
+                    return Json(new { success = true, message = "Contact form submitted successfully!" });
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = $"Error: {ex.Message}" });
+                }
+            }
+            return Json(new { success = false, message = "Invalid form data." });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SubmitComplaint(ComplaintForm form)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // Save to database
+                    _context.ComplaintForms.Add(form);
+                    _context.SaveChanges();
+
+                    return Json(new { success = true, message = "Complaint form submitted successfully!" });
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = $"Error: {ex.Message}" });
+                }
+            }
+            return Json(new { success = false, message = "Invalid form data." });
+        }
+
+
     }
 }

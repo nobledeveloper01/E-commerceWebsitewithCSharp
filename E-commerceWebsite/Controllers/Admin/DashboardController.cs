@@ -4,6 +4,7 @@ using E_commerceWebsite.Data.Entities;
 using E_commerceWebsite.Data;
 using E_commerceWebsite.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_commerceWebsite.Controllers.Admin
 {
@@ -15,22 +16,16 @@ namespace E_commerceWebsite.Controllers.Admin
         {
             _context = context;
         }
-
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var totalSales = await _context.Orders
-                .Where(o => o.Status == "Completed")
+                .Where(o => o.Status == "Delivered" || o.Status == "Payment Received" || o.Status == "Order Dispatched")
                 .SumAsync(o => (decimal?)o.TotalAmount) ?? 0;
 
             var totalOrders = await _context.Orders.CountAsync();
             var totalProducts = await _context.AdminProducts.CountAsync();
             var totalUsers = await _context.Users.CountAsync();
-
-
-            Console.WriteLine("totalorder", totalOrders);
-            Console.WriteLine("totalsale", totalSales);
-            Console.WriteLine("totalorder", totalProducts);
-            Console.WriteLine("totalorder", totalUsers);
 
 
             var recentOrders = await _context.Orders
@@ -41,7 +36,7 @@ namespace E_commerceWebsite.Controllers.Admin
                     OrderId = o.OrderId ?? "N/A",
                     CustomerName = o.CustomerName ?? "Unknown",
                     OrderDate = o.OrderDate,
-                    Status = o.Status ?? "Pending",
+                    Status = o.Status ?? "Pending Payment",
                     TotalAmount = o.TotalAmount
                 })
                 .ToListAsync();
